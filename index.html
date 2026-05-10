@@ -13,13 +13,15 @@
 
 <body class="bg-gray-100 antialiased text-gray-800">
 
+    <!------------------------------------ LOGIN DASHBOARD ------------------------------------>
+
     <section id="login" class="flex items-center justify-center h-screen p-6">
         <div class="bg-white w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl border border-gray-100">
             <header class="text-center mb-10">
                 <h1 class="text-[#76a609] text-4xl font-black uppercase tracking-tighter">Login</h1>
                 <p class="text-gray-400 text-sm font-medium">KOSINA MANAGEMENT SYSTEM</p>
             </header>
-            <form onsubmit="showDashboard(event)" class="space-y-6">
+            <div class="space-y-6">
                 <div class="space-y-2">
                     <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
                     <input type="text" id="username"
@@ -28,7 +30,7 @@
                 </div>
                 <div class="space-y-2">
                     <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
-                    <input type="password" maxlength="8" id="password"
+                    <input type="password" maxlength="50" id="password"
                         class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#76a609] outline-none transition-all"
                         placeholder="••••••••" required>
                 </div>
@@ -36,14 +38,18 @@
                     class="w-full bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-[#76a609]/30 hover:bg-[#658e08] hover:scale-[1.02] active:scale-95 transition-all">
                     Enter Dashboard
                 </button>
-            </form>
+            </div>
         </div>
     </section>
+
+    <!------------------------------------ LODAING SCREEN ------------------------------------>
 
     <section id="loading" class="hidden flex flex-col items-center justify-center h-screen">
         <div class="w-16 h-16 border-4 border-[#d8e0c6] border-t-[#76a609] rounded-full animate-spin mb-4"></div>
         <p class="text-[#76a609] text-xl font-black uppercase tracking-widest animate-pulse">Initializing</p>
     </section>
+
+    <!------------------------------------ DASHBOARD CHOICES ------------------------------------>
 
     <main id="dashboard" class="hidden min-h-screen flex flex-col items-center justify-center p-8">
 
@@ -54,6 +60,8 @@
         </header>
 
         <nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
+
+    <!------------------------------------ CATEGORY BUTTON ------------------------------------>
 
             <button onclick="openMenu()"
                 class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
@@ -66,6 +74,8 @@
                 </div>
             </button>
 
+    <!------------------------------------ PRODUCT BUTTON ------------------------------------>
+
             <button onclick="openList()"
                 class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
                 <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
@@ -76,6 +86,8 @@
                     <p class="font-black text-2xl text-gray-700">LIST</p>
                 </div>
             </button>
+
+    <!------------------------------------ HISTORY BUTTON ------------------------------------>
 
             <button onclick="openHistory()"
                 class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
@@ -88,6 +100,8 @@
                 </div>
             </button>
 
+     <!------------------------------------ DETAILS BUTTON ------------------------------------>
+
             <button onclick="openDetails()"
                 class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
                 <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
@@ -99,6 +113,8 @@
                 </div>
             </button>
 
+    <!------------------------------------ DAILY SALES BUTTON ------------------------------------>
+
             <button onclick="openSales()"
                 class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
                 <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
@@ -109,6 +125,8 @@
                     <p class="font-black text-2xl text-gray-700">SALES</p>
                 </div>
             </button>
+
+    <!------------------------------------ EXIT BUTTON ------------------------------------>
 
             <button onclick="exitDashboard()"
                 class="group bg-red-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-red-100 hover:shadow-2xl hover:scale-105 transition-all">
@@ -123,8 +141,14 @@
         </nav>
     </main>
 
+
+    <!------------------------------------ MAIN DASHBOARD ------------------------------------>
+
+
     <div id="modalOverlay"
         class="fixed inset-0 z-50 hidden modal-overlay items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
+
+    <!------------------------------------ CATEGORY DASHBOARD ------------------------------------>
 
         <section id="menuModal"
             class="hidden modal-content bg-white w-full max-w-6xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
@@ -149,21 +173,8 @@
                             <th class="pb-6 px-6 text-center">Modifications</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        <tr class="group hover:bg-gray-50/50 transition-colors">
-                            <td class="py-8 px-6 font-bold text-gray-400">01</td>
-                            <td class="py-8 px-6 font-black text-xl uppercase tracking-tight">Empanada</td>
-                            <td class="py-8 px-6 font-mono text-[#76a609] font-bold">D004</td>
-                            <td class="py-8 px-6">
-                                <div class="flex justify-center gap-3">
-                                    <button onclick="openDialog('editItem')"
-                                        class="px-6 py-3 bg-[#f4f9e6] text-[#76a609] rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-[#76a609] hover:text-white transition-all">Edit</button>
-                                    <button onclick="openDialog('deleteItem')"
-                                        class="px-6 py-3 bg-red-50 text-red-500 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
+
+                    <tbody class="divide-y divide-gray-50" id="categoryColumns"></tbody>
                 </table>
             </div>
 
@@ -174,6 +185,8 @@
                 </button>
             </footer>
         </section>
+
+        <!------------------------------------ PRODUCTS DASHBOARD ------------------------------------>
 
         <section id="listModal"
             class="hidden modal-content bg-white w-full max-w-[90%] rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
@@ -196,26 +209,13 @@
                             <th class="pb-6 px-6 text-center">Modify</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        <tr>
-                            <td class="py-6 px-6"><img src="images/2.png"
-                                    class="w-12 h-12 rounded-full bg-gray-50 object-cover"></td>
-                            <td class="py-6 px-6 font-bold text-gray-400 uppercase">Dog200</td>
-                            <td class="py-6 px-6 font-mono text-sm">DAS213141</td>
-                            <td class="py-6 px-6 font-black uppercase">Pritong Lobster</td>
-                            <td class="py-6 px-6 font-black text-[#76a609]">₱180</td>
-                            <td class="py-6 px-6"><span
-                                    class="px-3 py-1 bg-[#f4f9e6] text-[#76a609] rounded-full text-[10px] font-black uppercase">Yes</span>
-                            </td>
-                            <td class="py-6 px-6 text-center">
-                                <button onclick="openEditList()"
-                                    class="text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline">Edit</button>
-                            </td>
-                        </tr>
+                    <tbody class="divide-y divide-gray-50" id="productColumns"></tr>
                     </tbody>
                 </table>
             </div>
         </section>
+
+        <!------------------------------------ HISTORY DASHBOARD ------------------------------------>
 
         <section id="historyModal"
             class="hidden modal-content bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[80vh]">
@@ -236,20 +236,12 @@
                             <th class="pb-4">Status</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y">
-                        <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="py-6 font-mono text-xs">AWDASD213214</td>
-                            <td class="py-6 font-bold">12324W2</td>
-                            <td class="py-6 text-gray-400">2026-05-04</td>
-                            <td class="py-6 font-black text-[#76a609]">₱250</td>
-                            <td class="py-6 font-bold uppercase text-[10px]">Cash</td>
-                            <td class="py-6"><span class="text-blue-500 font-black text-[10px] uppercase">Paid</span>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody class="divide-y" id="historyColumns"></tbody>
                 </table>
             </div>
         </section>
+
+        <!------------------------------------ DETAILS DASHBOARD ------------------------------------>
 
         <section id="detailsModal"
             class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
@@ -266,14 +258,7 @@
                             <th class="pb-4">Qty</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="py-6 border-b border-gray-50">
-                            <td class="py-6 font-bold">TXN001</td>
-                            <td class="py-6 font-mono text-xs text-gray-400">DOG1231</td>
-                            <td class="py-6 font-mono text-xs text-gray-400">GAS2005</td>
-                            <td class="py-6 font-black text-xl">2</td>
-                        </tr>
-                    </tbody>
+                    <tbody id="detailColumns"></tbody>
                 </table>
             </div>
             <button onclick="toggleModal('detailsModal', false)"
@@ -281,10 +266,12 @@
                 Viewer</button>
         </section>
 
+        <!------------------------------------ DAILY SALES DASHBOARD ------------------------------------>
+
         <section id="salesModal"
             class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
             <header class="text-center mb-10 relative">
-                <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Daily Analytics</h3>
+                <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Daily Sales</h3>
                 <button onclick="toggleModal('salesModal', false)"
                     class="absolute right-0 top-0 text-gray-300 hover:text-red-500">✕</button>
             </header>
@@ -298,20 +285,14 @@
                             <th class="pb-4">Total Income</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y">
-                        <tr class="hover:bg-gray-50/50">
-                            <td class="py-8 font-mono text-xs text-gray-400">ASDAS2131231</td>
-                            <td class="py-8 font-bold">2026-05-04</td>
-                            <td class="py-8 font-black text-2xl text-[#76a609]">₱1,250</td>
-                            <td class="py-8 font-black text-2xl text-gray-800">₱1,250</td>
-                        </tr>
-                    </tbody>
+                    <tbody class="divide-y" id ="saleColumns"></tbody>
                 </table>
             </div>
         </section>
 
     </div>
 
+    <!------------------------------------ EDIT CATEGORY ------------------------------------>
 
     <dialog id="editItem"
         class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
@@ -348,6 +329,8 @@
             </div>
         </div>
     </dialog>
+
+    <!------------------------------------ MAIN DASHBOARD ------------------------------------>
 
     <dialog id="editList"
         class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 w-full h-full border-none">
@@ -434,6 +417,8 @@
         </div>
     </dialog>
 
+    <!------------------------------------ DELETE DASHBOARD ------------------------------------>
+
     <dialog id="deleteItem"
         class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
         <div class="bg-white w-full max-w-sm rounded-[3rem] shadow-2xl p-12 text-center modal-content">
@@ -461,7 +446,7 @@
 
 
 
-    <script src="./src/js/main.js">
+    <script src="./src/js/main.js" type="module">
 
     </script>
 </body>
