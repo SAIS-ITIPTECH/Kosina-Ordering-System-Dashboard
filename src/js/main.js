@@ -304,7 +304,6 @@ function exitDashboard() {
 }
 
 // LOGOUT FUNCTION
-
 function logout(){
     document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
@@ -313,51 +312,94 @@ function logout(){
     location.reload();
 }
 
-// UPLOAD PANEL
-// const uploadPanel = document.getElementById('UploadPanel');
-// const imageInput = document.getElementById("image");
-// const replaceImage = document.getElementById("replaceImage");
-// const addImage = document.getElementById("addImage");
-// const removeImage = document.getElementById("removeImage");
-// const closeUpload = document.getElementById("closeUpload");
-// const upload = new UploadPanel();
+// UPLOAD IMG
+const imageInput = document.getElementById("imageInput");
 
-// // START
-// const buttons = new OptionsButton('optionButtons');
-// buttons.start();
-// const dashboardContainer = document.getElementById('dashboardPlaceholder')
-// const mainPanel = document.getElementById('main');
+function openUpload(id){
+    selectedId = id
+    const dialog = document.getElementById("UploadPanel")
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+}
 
-// // DELETE PANEL
-// const deletePanel = document.getElementById("deletePanel");
-// const yes = document.getElementById('yes');
-// const no = document.getElementById('no');
+function closeUpload(){
+    selectedId = null;
+    const dialog = document.getElementById("UploadPanel")
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+}
 
-// // MODIFY PANEL
-// const modifyPanel = document.getElementById('modifyPanel');
-// const del = new DeleteSomething();
-// const loginPanel = document.getElementById("loginPanel");
+async function addImg(){
+    if (checkIfEmpty().includes("null")) {
+        const img64 = await getImage() || false;
+        if (!img64) { return; }
+        const data = await database.post("image", {
+            "image": img64,
+            "productId": selectedId,
+        })
+        imgResults(data);
+        closeUpload();
+    } else {
+        window.alert("THIS PRODUCT HAS ALREADY IMAGE!");
+    }
+}
 
-// // MAP
-// const dashboardMap = {
-//     'categories': CategoryDashboard,
-//     'products': ProductsDashboard,
-//     'history': HistoryDashboard,
-//     'details': DetailsDashboard,
-//     "dailySales": DailySalesDashboard
-// };
+async function replaceImg(){
+    if (checkIfEmpty().includes("null")) {
+            window.alert("THIS PRODUCT HAS NO IMAGE!");
+    } else {
+        const img64 = await getImage() || false;
+        if (!img64) { return; }
+        const data = await database.patch("image", {
+            "image": img64,
+            "productId": selectedId,
+            "imageId": document.getElementById(`${selectedId}Img`).alt
+        }, selectedId)
+        imgResults(data);
+        closeUpload();
+    }
+}
 
-// const modifyPanelMap = {
-//     'categories': ModifyCategory,
-//     'products': ModifyProducts
-// };
+async function removeImg(){
+    if (checkIfEmpty().includes("null")) {
+        window.alert("THIS PRODUCT HAS NO IMAGE!");
+    } else {
+        const data = await database.delete("image", document.getElementById(`${selectedId}Img`).alt)
+        imgResults(data);
+        closeUpload();
+    }
+}
 
-// // LOGIN RELATED
-// const tokenChecker = new TokenChecker;
-// tokenChecker.checkToken();
+function checkIfEmpty(){
+    return document.getElementById(`${selectedId}Img`).src
+}
 
-// const login = new LoginPanel();
-// const sidePanel = document.getElementById("sidePanel");
+function getImage() {
+    return new Promise((resolve, reject) => {
+        const file = imageInput.files[0] ? imageInput.files[0] : false;
+        if (!file) return reject(window.alert("No file selected"));
+
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            resolve(reader.result);
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+function imgResults(data){
+    if (data["status"] === "error") {
+        window.alert(`${data["message"]}`);
+    }
+    else{
+        window.alert(`${data["message"]}`);
+        let newDashboard = new Products(columnMap["products"])
+        newDashboard.displayAll()
+    }
+}
 
 window.openMenu = openMenu;
 window.openList = openList;
@@ -381,3 +423,9 @@ window.submitProduct = submitProduct;
 window.openDelete = openDelete;
 window.deleteItem = deleteItem;
 window.closeDelete = closeDelete;
+
+window.openUpload = openUpload;
+window.closeUpload = closeUpload;
+window.addImg = addImg;
+window.replaceImg = replaceImg;
+window.removeImg = removeImg;
