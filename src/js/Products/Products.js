@@ -7,6 +7,7 @@ export class Products{
     }
 
     async displayAll(){
+        this.container.innerText = "";
         const products = await database.get("products");
 
         for(let pro of products){

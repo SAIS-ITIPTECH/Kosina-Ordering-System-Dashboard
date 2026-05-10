@@ -9,6 +9,7 @@ import { DailySales } from "./DailySales/DailySales.js";
 
 export const database = new DatabaseConnector();
 
+
 export function getCookie(cookieName){
     const cookies = document.cookie.split(';');
     for(const cookie of cookies){
@@ -26,26 +27,29 @@ loginPanel.checkToken();
 let activeParentModal = null;
 
 const modalMap = {
-    'menuModal': Categories,
-    'listModal': Products,
-    'historyModal': History,
-    'detailsModal': Details,
-    "salesModal": DailySales
+    'categories': Categories,
+    'products': Products,
+    'history': History,
+    'details': Details,
+    "sales": DailySales
 };
 
 const columnMap = {
-    'menuModal': document.getElementById("categoryColumns"),
-    'listModal': document.getElementById("productColumns"),
-    'historyModal': document.getElementById("historyColumns"),
-    'detailsModal': document.getElementById("detailColumns"),
-    "salesModal": document.getElementById("saleColumns")
+    'categories': document.getElementById("categoryColumns"),
+    'products': document.getElementById("productColumns"),
+    'history': document.getElementById("historyColumns"),
+    'details': document.getElementById("detailColumns"),
+    "sales": document.getElementById("saleColumns")
 }
 
 // 2. UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
 function toggleModal(id, show) {
+    console.log(id)
     const overlay = document.getElementById("modalOverlay");
     const modal = document.getElementById(id);
     const columnContainer = columnMap[id];
+
+    console.log(columnContainer)
 
     if (show) {
         let modalContents = new modalMap[id](columnContainer);
@@ -55,7 +59,6 @@ function toggleModal(id, show) {
         modal.classList.remove("hidden");
     } else {
         columnContainer.innerText = "";
-        console.log("hide")
         overlay.classList.add("hidden");
         overlay.classList.remove("flex");
         modal.classList.add("hidden");
@@ -85,10 +88,11 @@ function openEditCategory(method, id = false){
     dialog.classList.add("flex");
 }
 
+const displayIndex = document.getElementById("displayIndex");
+const categoryName = document.getElementById("categoryName");
+const categoryId = document.getElementById("categoryId");
+
 function setPreviousCategory(id){
-    const displayIndex = document.getElementById("displayIndex");
-    const categoryName = document.getElementById("categoryName");
-    const categoryId = document.getElementById("categoryId");
     const selectedCategory = document.getElementById(id);
     const cells = selectedCategory.cells;
     displayIndex.value = cells[0].innerText;
@@ -97,6 +101,10 @@ function setPreviousCategory(id){
 }
 
 function closeEditCategory(){
+    displayIndex.value = "";
+    categoryName.value = "";
+    categoryId.value = "";
+
     const dialog = document.getElementById("editCategory")
     selectedId = null;
     dialog.classList.add("hidden");
@@ -105,9 +113,6 @@ function closeEditCategory(){
 
 async function submitCategory(){
     const title = document.getElementById("categoryTitle");
-    const displayIndex = document.getElementById("displayIndex");
-    const categoryName = document.getElementById("categoryName");
-    const categoryId = document.getElementById("categoryId");
     let response;
     let message;
     if (title.innerText.toLowerCase().includes("edit")){
@@ -138,20 +143,101 @@ async function submitCategory(){
 
 // ========================================================================================
 
-function openEditProduct(method){
+async function openEditProduct(method, id = false){
     const dialog = document.getElementById("editProduct")
     const title = document.getElementById("productTitle");
     title.innerHTML = `
         ${capitalize(method)} <span class="text-[#76a609]">Product</span>
     `
+
+    let choices = ``;
+    let categories = await database.get('categories')
+    categories.forEach(element => {
+        choices += `<option value="${element["category_id"]}">${element["category_id"]}</option>`
+    });
+    productCatId.innerHTML = choices;
+
+    if (id) { 
+        selectedId = id;
+        setPreviousProduct(); 
+    }
+
+   
     dialog.classList.remove("hidden");
     dialog.classList.add("flex");
 }
 
+const productCatId = document.getElementById("productCatId")
+const productId = document.getElementById("productId")
+const productName = document.getElementById("productName")
+const price = document.getElementById("price")
+const availableTrue = document.getElementById("avaialableTrue")
+const availableFalse = document.getElementById("avaialableFalse")
+
+function setPreviousProduct(){
+    const selectedProduct = document.getElementById(selectedId);
+    const cells = selectedProduct.cells;
+    
+    productCatId.selectedIndex = [...productCatId.options].findIndex(opt => opt.innerText === cells[1].innerText);
+    productId.value = cells[2].innerText
+    productName.value = cells[3].innerText
+    price.value = cells[4].innerText
+    if (cells[5].innerText.toLowerCase() === "true") {
+        avaialableTrue.checked = true
+    } else if (cells[5].innerText.toLowerCase() === "false") {
+        availableFalse.checked = true
+    }
+}
+
+
+
 function closeEditProduct(){
+    productCatId.value = "";
+    productId.value = "";
+    productName.value = "";
+    price.value = "";
+    avaialableTrue.value = "";
+    avaialableTrue.value = "";
+
     const dialog = document.getElementById("editProduct")
     dialog.classList.add("hidden");
     dialog.classList.remove("flex");
+}
+
+async function submitProduct(){
+    let title = document.getElementById("productTitle")
+    let response;
+    let message;
+
+    if (title.innerText.toLowerCase().includes("edit")){
+        response = await database.patch("products", {
+            "categoryId": productCatId.value,
+            "productId": productId.value,
+            "name": productName.value,
+            "price": price.value,
+            "available": Boolean(document.querySelector('input[name="availability"]:checked').value)
+        }, selectedId);
+        message = "UPDATED";
+
+    } else if ((title.innerText.toLowerCase().includes("add"))) {
+        response = await database.post("products", {
+            "categoryId": productCatId.value,
+            "productId": productId.value,
+            "name": productName.value,
+            "price": price.value,
+            "available": Boolean(document.querySelector('input[name="availability"]:checked').value)
+        })
+        message = "ADDED";
+    }
+
+    if (await response["status"] === "error") {
+        window.alert(`${response["message"]}`);
+    } else {
+        triggerSuccess(message);
+        closeEditProduct();
+        const products = new Products(document.getElementById("productColumns"))
+        products.displayAll();
+    }
 }
 
 // ========================================================================================
@@ -167,13 +253,15 @@ function openDelete(table, id){
 async function deleteItem(){
     const response = await database.delete(selectedTable, selectedId)
     window.alert(`${await response["message"]}`);
-    const categories = new Categories(document.getElementById("categoryColumns"))
-    categories.displayAll();
+
+    const table = new modalMap[selectedTable](columnMap[selectedTable])
+    table.displayAll();
     closeDelete();
 }
 
 function closeDelete(){
     selectedId = null;
+    selectedTable = null;
     const dialog = document.getElementById("deleteItem")
     dialog.classList.add("hidden");
     dialog.classList.remove("flex");
@@ -195,23 +283,20 @@ function triggerSuccess(message) {
 }
 
 // 5. LEGACY WRAPPERS (So your existing button clicks still work)
-function openMenu() { toggleModal('menuModal', true); }
-function closeMenu() { toggleModal('menuModal', false); }
+function openMenu() { toggleModal('categories', true); }
+function closeMenu() { toggleModal('categories', false); }
 
-function openList() { toggleModal('listModal', true); }
-function closeList() { toggleModal('listModal', false); }
+function openList() { toggleModal('products', true); }
+function closeList() { toggleModal('products', false); }
 
-function openHistory() { toggleModal('historyModal', true); }
-function closeHistory() { toggleModal('historyModal', false); }
+function openHistory() { toggleModal('history', true); }
+function closeHistory() { toggleModal('history', false); }
 
-function openDetails() { toggleModal('detailsModal', true); }
-function closeDetails() { toggleModal('detailsModal', false); }
+function openDetails() { toggleModal('details', true); }
+function closeDetails() { toggleModal('details', false); }
 
-function openSales() { toggleModal('salesModal', true); }
-function closeSales() { toggleModal('salesModal', false); }
-
-function openNew() { openDialog('editItem'); } // Reusing the edit dialog for new items
-function openEdit() { openDialog('editItem'); }
+function openSales() { toggleModal('sales', true); }
+function closeSales() { toggleModal('sales', false); }
 
 // 6. LOGOUT
 function exitDashboard() {
@@ -279,13 +364,20 @@ window.openList = openList;
 window.openHistory = openHistory;
 window.openDetails = openDetails;
 window.openSales = openSales;
-window.toggleModal = toggleModal;
+window.closeMenu = closeMenu;
+window.closeList = closeList;
+window.closeHistory = closeHistory;
+window.closeDetails = closeDetails;
+window.closeSales = closeSales;
+
 window.openEditCategory = openEditCategory;
 window.closeEditCategory = closeEditCategory;
-window.openEditProducts = openEditProducts;
-window.closeEditProducts = closeEditProducts;
 window.submitCategory = submitCategory;
+
+window.openEditProduct = openEditProduct;
+window.closeEditProduct = closeEditProduct;
+window.submitProduct = submitProduct;
+
 window.openDelete = openDelete;
 window.deleteItem = deleteItem;
 window.closeDelete = closeDelete;
-window.openEditProduct = openEditProduct;
