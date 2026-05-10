@@ -46,8 +46,6 @@ function toggleModal(id, show) {
     const overlay = document.getElementById("modalOverlay");
     const modal = document.getElementById(id);
     const columnContainer = columnMap[id];
-    console.log(columnContainer)
-        console.log(id)
 
     if (show) {
         let modalContents = new modalMap[id](columnContainer);
@@ -64,37 +62,131 @@ function toggleModal(id, show) {
     }
 }
 
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 // 3. DIALOG SYSTEM (Opens Edit, Delete, Add New Popups)
-function openDialog(id) {
-    const dialog = document.getElementById(id);
+let selectedId;
+let selectedTable;
+
+function openEditCategory(method, id = false){
+    const dialog = document.getElementById("editCategory")
+    const title = document.getElementById("categoryTitle");
+    title.innerHTML = `
+        ${capitalize(method)} <span class="text-[#76a609]">Category</span>
+    `
+    if (id) { 
+        selectedId = id;
+        setPreviousCategory(id); 
+    }
+
     dialog.classList.remove("hidden");
     dialog.classList.add("flex");
 }
 
-function closeDialog(id) {
-    const dialog = document.getElementById(id);
+function setPreviousCategory(id){
+    const displayIndex = document.getElementById("displayIndex");
+    const categoryName = document.getElementById("categoryName");
+    const categoryId = document.getElementById("categoryId");
+    const selectedCategory = document.getElementById(id);
+    const cells = selectedCategory.cells;
+    displayIndex.value = cells[0].innerText;
+    categoryName.value = cells[1].innerText;
+    categoryId.value = cells[2].innerText;
+}
+
+function closeEditCategory(){
+    const dialog = document.getElementById("editCategory")
+    selectedId = null;
     dialog.classList.add("hidden");
     dialog.classList.remove("flex");
 }
 
-function openEditList1(id) {
-    const dialog = document.getElementById(id);
+async function submitCategory(){
+    const title = document.getElementById("categoryTitle");
+    const displayIndex = document.getElementById("displayIndex");
+    const categoryName = document.getElementById("categoryName");
+    const categoryId = document.getElementById("categoryId");
+    let response;
+    let message;
+    if (title.innerText.toLowerCase().includes("edit")){
+        response = await database.patch("categories", {
+            "displayIndex": displayIndex.value,
+            "name": categoryName.value,
+            "categoryId": categoryId.value
+        }, selectedId);
+        message = "UPDATED";
+    } else if ((title.innerText.toLowerCase().includes("add"))) {
+        response = await database.post("categories", {
+            "displayIndex": displayIndex.value,
+            "name": categoryName.value,
+            "categoryId": categoryId.value
+        })
+        message = "ADDED";
+    }
+
+    if (await response["status"] === "error") {
+        window.alert(`${response["message"]}`);
+    } else {
+        triggerSuccess(message);
+        closeEditCategory();
+        const categories = new Categories(document.getElementById("categoryColumns"))
+        categories.displayAll();
+    }
+}
+
+// ========================================================================================
+
+function openEditProduct(method){
+    const dialog = document.getElementById("editProduct")
+    const title = document.getElementById("productTitle");
+    title.innerHTML = `
+        ${capitalize(method)} <span class="text-[#76a609]">Product</span>
+    `
     dialog.classList.remove("hidden");
     dialog.classList.add("flex");
 }
-function closeEditList1(id) {
-    const dialog = document.getElementById(id);
+
+function closeEditProduct(){
+    const dialog = document.getElementById("editProduct")
     dialog.classList.add("hidden");
     dialog.classList.remove("flex");
 }
+
+// ========================================================================================
+
+function openDelete(table, id){
+    selectedTable = table;
+    selectedId = id;
+    const dialog = document.getElementById("deleteItem")
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+}
+
+async function deleteItem(){
+    const response = await database.delete(selectedTable, selectedId)
+    window.alert(`${await response["message"]}`);
+    const categories = new Categories(document.getElementById("categoryColumns"))
+    categories.displayAll();
+    closeDelete();
+}
+
+function closeDelete(){
+    selectedId = null;
+    const dialog = document.getElementById("deleteItem")
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+}
+
 
 // 4. SUCCESS FEEDBACK (The Toast Notification)
-function triggerSuccess(parentId) {
-    if (parentId) closeDialog(parentId);
-
+function triggerSuccess(message) {
     const toast = document.getElementById("successDihh");
     toast.classList.remove("hidden");
     toast.classList.add("flex");
+
+    document.getElementById("successMsg").innerText = `${message} SUCCESSFULLY`
 
     setTimeout(() => {
         toast.classList.add("hidden");
@@ -109,12 +201,6 @@ function closeMenu() { toggleModal('menuModal', false); }
 function openList() { toggleModal('listModal', true); }
 function closeList() { toggleModal('listModal', false); }
 
-function openEditList() { toggleModal('editList', true); }
-function closeEditList() { toggleModal('editList', false); }
-
-function openEditList() { toggleModal('editList', true); }
-function closeEditList() { toggleModal('editList', false); }
-
 function openHistory() { toggleModal('historyModal', true); }
 function closeHistory() { toggleModal('historyModal', false); }
 
@@ -126,13 +212,11 @@ function closeSales() { toggleModal('salesModal', false); }
 
 function openNew() { openDialog('editItem'); } // Reusing the edit dialog for new items
 function openEdit() { openDialog('editItem'); }
-function openDelete() { openDialog('deleteItem'); }
 
 // 6. LOGOUT
 function exitDashboard() {
     window.location.reload(); // Hard reset back to login screen
 }
-
 
 // LOGOUT FUNCTION
 
@@ -196,4 +280,12 @@ window.openHistory = openHistory;
 window.openDetails = openDetails;
 window.openSales = openSales;
 window.toggleModal = toggleModal;
-window.openDialog = openDialog;
+window.openEditCategory = openEditCategory;
+window.closeEditCategory = closeEditCategory;
+window.openEditProducts = openEditProducts;
+window.closeEditProducts = closeEditProducts;
+window.submitCategory = submitCategory;
+window.openDelete = openDelete;
+window.deleteItem = deleteItem;
+window.closeDelete = closeDelete;
+window.openEditProduct = openEditProduct;

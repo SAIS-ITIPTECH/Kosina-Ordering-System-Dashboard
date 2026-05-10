@@ -179,7 +179,7 @@
             </div>
 
             <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="openDialog('addNew')"
+                <button onclick="openEditCategory('add')"
                     class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
                     + Add New Category
                 </button>
@@ -213,6 +213,13 @@
                     </tbody>
                 </table>
             </div>
+
+            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
+                <button onclick="openEditProduct('add')"
+                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
+                    + Add New Product
+                </button>
+            </footer>
         </section>
 
         <!------------------------------------ HISTORY DASHBOARD ------------------------------------>
@@ -294,22 +301,23 @@
 
     <!------------------------------------ EDIT CATEGORY ------------------------------------>
 
-    <dialog id="editItem"
+    <dialog id="editCategory"
         class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
         <div class="bg-white w-full max-w-md rounded-[3rem] shadow-2xl p-12 modal-content">
-            <h4 class="text-2xl font-black uppercase text-center mb-10 text-gray-800">Modify <span
-                    class="text-[#76a609]">Category</span></h4>
+            <h4 class="text-2xl font-black uppercase text-center mb-10 text-gray-800" id="categoryTitle"></h4>
             <div class="space-y-6">
                 <div>
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Display
                         Index</label>
                     <input
+                        id="displayIndex"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="e.g. 01">
                 </div>
                 <div>
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Name</label>
                     <input
+                        id="categoryName"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="Category Name">
                 </div>
@@ -317,28 +325,28 @@
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
                         ID</label>
                     <input
+                        id="categoryId"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="ID Code">
                 </div>
                 <div class="flex gap-4 mt-10">
-                    <button onclick="triggerSuccess('editItem')"
+                    <button onclick="submitCategory()"
                         class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:bg-[#658e08] transition-all">Confirm</button>
-                    <button onclick="closeDialog('editItem')"
+                    <button onclick="closeEditCategory()"
                         class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
                 </div>
             </div>
         </div>
     </dialog>
 
-    <!------------------------------------ MAIN DASHBOARD ------------------------------------>
+    <!------------------------------------ EDIT PRODUCT ------------------------------------>
 
-    <dialog id="editList"
+    <dialog id="editProduct"
         class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 w-full h-full border-none">
         <div
             class="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl p-12 modal-content overflow-y-auto max-h-[90vh] no-scrollbar">
             <header class="text-center mb-10">
-                <h4 class="text-3xl font-black uppercase text-gray-800 tracking-tighter">Edit <span
-                        class="text-[#76a609]">Product</span></h4>
+                <h4 class="text-3xl font-black uppercase text-gray-800 tracking-tighter" id="productTitle"></h4>
                 <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">Update Inventory Item
                     Details</p>
             </header>
@@ -411,7 +419,7 @@
                 <button onclick="triggerSuccess('editList')"
                     class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:scale-[1.02] active:scale-95 transition-all">Update
                     Product</button>
-                <button onclick="closeDialog('editList')"
+                <button onclick="closeEditProducts()"
                     class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
             </div>
         </div>
@@ -426,12 +434,11 @@
                 class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
                 ⚠️</div>
             <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
-            <p class="text-gray-400 text-sm mb-8 font-medium">This action cannot be undone.</p>
             <div class="flex flex-col gap-3">
-                <button onclick="closeDialog('deleteItem')"
+                <button onclick="deleteItem()"
                     class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Delete
                     Permanently</button>
-                <button onclick="closeDialog('deleteItem')"
+                <button onclick="closeDelete()"
                     class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Keep
                     Item</button>
             </div>
@@ -441,7 +448,7 @@
     <div id="successDihh"
         class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-gray-900 text-white px-10 py-6 rounded-[2.5rem] shadow-2xl flex items-center gap-4 animate-bounce">
         <div class="w-8 h-8 bg-[#76a609] rounded-full flex items-center justify-center text-xs">✔</div>
-        <p class="font-black uppercase text-xs tracking-[0.2em]">Updated Successfully</p>
+        <p class="font-black uppercase text-xs tracking-[0.2em]" id="successMsg">Updated Successfully</p>
     </div>
 
 
