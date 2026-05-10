@@ -945,10 +945,6 @@ class UploadPanel{
         }
     }
 
-    checkIfEmpty(){
-        return document.getElementById(`${this.id}Img`).src
-    }
-
     getImage() {
         return new Promise((resolve, reject) => {
             const file = imageInput.files[0];

@@ -414,6 +414,8 @@
                     class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
             </div>
         </div>
+
+        
     </dialog>
 
     <!------------------------------------ DELETE DASHBOARD ------------------------------------>
@@ -442,6 +444,15 @@
         <p class="font-black uppercase text-xs tracking-[0.2em]" id="successMsg">Updated Successfully</p>
     </div>
 
+    <dialog id="UploadPanel" class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 w-full h-full border-none">
+        <div>
+            <input type="file" id="imageInput">
+            <button onclick="addImg()"id="addImage"onclick="closeUpload()">ADD</button>
+            <button onclick="replaceImg()" id="replaceImage">REPLACE</button>
+            <button onclick="removeImg()" id="removeImage">REMOVE</button>
+            <button onclick="closeUpload()" id="closeUpload">BACK</button>
+        </div>
+    </dialog>
 
 
     <script src="./src/js/main.js" type="module">
