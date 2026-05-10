@@ -150,7 +150,7 @@
 
     <!------------------------------------ CATEGORY DASHBOARD ------------------------------------>
 
-        <section id="menuModal"
+        <section id="categories"
             class="hidden modal-content bg-white w-full max-w-6xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
             <header class="flex justify-between items-center mb-10">
                 <div>
@@ -158,7 +158,7 @@
                     <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mt-1">Organize Menu
                         Sections</p>
                 </div>
-                <button onclick="toggleModal('menuModal', false)"
+                <button onclick="closeMenu()"
                     class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-xl hover:bg-red-50 hover:text-red-500 transition-all">✕</button>
             </header>
 
@@ -188,11 +188,11 @@
 
         <!------------------------------------ PRODUCTS DASHBOARD ------------------------------------>
 
-        <section id="listModal"
+        <section id="products"
             class="hidden modal-content bg-white w-full max-w-[90%] rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
             <header class="flex justify-between items-center mb-10">
                 <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Inventory List</h3>
-                <button onclick="toggleModal('listModal', false)"
+                <button onclick="closeList()"
                     class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center hover:bg-red-50 transition-all">✕</button>
             </header>
             <div class="flex-1 overflow-y-auto no-scrollbar">
@@ -224,11 +224,11 @@
 
         <!------------------------------------ HISTORY DASHBOARD ------------------------------------>
 
-        <section id="historyModal"
+        <section id="history"
             class="hidden modal-content bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[80vh]">
             <header class="text-center mb-10 relative">
                 <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Order History</h3>
-                <button onclick="toggleModal('historyModal', false)"
+                <button onclick="closeHistory()"
                     class="absolute -top-2 right-0 w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center hover:bg-red-50 transition-all">✕</button>
             </header>
             <div class="flex-1 overflow-y-auto no-scrollbar">
@@ -250,7 +250,7 @@
 
         <!------------------------------------ DETAILS DASHBOARD ------------------------------------>
 
-        <section id="detailsModal"
+        <section id="details"
             class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
             <header class="text-center mb-10">
                 <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Transaction Details</h3>
@@ -268,18 +268,18 @@
                     <tbody id="detailColumns"></tbody>
                 </table>
             </div>
-            <button onclick="toggleModal('detailsModal', false)"
+            <button onclick="closeDetails()"
                 class="mt-8 bg-gray-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all">Close
                 Viewer</button>
         </section>
 
         <!------------------------------------ DAILY SALES DASHBOARD ------------------------------------>
 
-        <section id="salesModal"
+        <section id="sales"
             class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
             <header class="text-center mb-10 relative">
                 <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Daily Sales</h3>
-                <button onclick="toggleModal('salesModal', false)"
+                <button onclick="closeSales()"
                     class="absolute right-0 top-0 text-gray-300 hover:text-red-500">✕</button>
             </header>
             <div class="flex-1 overflow-y-auto no-scrollbar">
@@ -352,25 +352,16 @@
             </header>
 
             <div class="grid grid-cols-2 gap-6">
-                <div class="col-span-2 space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Image Source
-                        URL</label>
-                    <input type="file"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="images/product.png">
-                </div>
-
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
                         ID</label>
-                    <input
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="CAT-001">
+                    <select name="categoryId" id="productCatId"></select>
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
                         ID</label>
                     <input
+                        id="productId"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="PROD-99">
                 </div>
@@ -379,12 +370,14 @@
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
                         Name</label>
                     <input
+                        id="productName"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="Item Name">
                 </div>
                 <div class="space-y-2">
                     <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Price (₱)</label>
                     <input
+                        id="price"
                         class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
                         placeholder="0.00">
                 </div>
@@ -394,21 +387,19 @@
                         Status</p>
                     <div class="flex gap-4">
                         <label class="flex-1 cursor-pointer group">
-                            <input type="radio" name="availability" value="yes" class="hidden peer" checked>
+                            <input id="avaialableTrue" type="radio" name="availability" value="true" class="hidden peer" checked>
                             <div
                                 class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-[#76a609] peer-checked:bg-[#f4f9e6] transition-all">
                                 <span
-                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-[#76a609]">In
-                                    Stock</span>
+                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-[#76a609]">TRUE</span>
                             </div>
                         </label>
                         <label class="flex-1 cursor-pointer group">
-                            <input type="radio" name="availability" value="no" class="hidden peer">
+                            <input id="avaialableFalse" type="radio" name="availability" value="false" class="hidden peer">
                             <div
                                 class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
                                 <span
-                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-red-500">Sold
-                                    Out</span>
+                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-red-500">FALSE</span>
                             </div>
                         </label>
                     </div>
@@ -416,10 +407,10 @@
             </div>
 
             <div class="flex gap-4 mt-10">
-                <button onclick="triggerSuccess('editList')"
+                <button onclick="submitProduct()"
                     class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:scale-[1.02] active:scale-95 transition-all">Update
                     Product</button>
-                <button onclick="closeEditProducts()"
+                <button onclick="closeEditProduct()"
                     class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
             </div>
         </div>
