@@ -7,6 +7,7 @@ export class History{
     }
 
     async displayAll(){
+        this.container.innerText = "";
         const history = await database.get("history");
         for(let his of history){
             const renderer = new RenderHistory(this.container, his)

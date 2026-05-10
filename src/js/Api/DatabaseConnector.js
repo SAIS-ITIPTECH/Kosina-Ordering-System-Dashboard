@@ -24,7 +24,6 @@ export class DatabaseConnector{
     }
 
     async patch(target, body, id){
-        console.log(id);
         let data = await fetch(`https://kosina-api.up.railway.app/${target}/${id}`,{
             method: "PATCH",
             headers: {
@@ -37,7 +36,6 @@ export class DatabaseConnector{
     }
 
     async delete(target, id){
-        console.log(id);
         let data = await fetch(`https://kosina-api.up.railway.app/${target}/${id}`,{
             method: "DELETE",
             headers: {

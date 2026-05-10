@@ -7,6 +7,7 @@ export class DailySales{
     }
 
     async displayAll(){
+        this.container.innerText = "";
         const sales = await database.get("sales");
         for(let sal of sales){
             const renderer = new RenderDailySales(this.container, sal)

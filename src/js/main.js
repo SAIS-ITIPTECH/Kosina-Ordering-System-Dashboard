@@ -44,12 +44,10 @@ const columnMap = {
 
 // 2. UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
 function toggleModal(id, show) {
-    console.log(id)
     const overlay = document.getElementById("modalOverlay");
     const modal = document.getElementById(id);
     const columnContainer = columnMap[id];
 
-    console.log(columnContainer)
 
     if (show) {
         let modalContents = new modalMap[id](columnContainer);
@@ -69,7 +67,13 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// 3. DIALOG SYSTEM (Opens Edit, Delete, Add New Popups)
+// ===================================================================
+// DIALOGUES
+
+// ===================================================================
+// EDIT CATEGORY DIALOGUES
+
+
 let selectedId;
 let selectedTable;
 
@@ -131,7 +135,7 @@ async function submitCategory(){
         message = "ADDED";
     }
 
-    if (await response["status"] === "error") {
+    if (response["status"] === "error") {
         window.alert(`${response["message"]}`);
     } else {
         triggerSuccess(message);
@@ -141,7 +145,15 @@ async function submitCategory(){
     }
 }
 
-// ========================================================================================
+// ===================================================================
+// EDIT PRODUCT DIALOGUE
+
+const productCatId = document.getElementById("productCatId")
+const productId = document.getElementById("productId")
+const productName = document.getElementById("productName")
+const price = document.getElementById("price")
+const availableTrue = document.getElementById("availableTrue")
+const availableFalse = document.getElementById("availableFalse")
 
 async function openEditProduct(method, id = false){
     const dialog = document.getElementById("editProduct")
@@ -167,13 +179,6 @@ async function openEditProduct(method, id = false){
     dialog.classList.add("flex");
 }
 
-const productCatId = document.getElementById("productCatId")
-const productId = document.getElementById("productId")
-const productName = document.getElementById("productName")
-const price = document.getElementById("price")
-const availableTrue = document.getElementById("avaialableTrue")
-const availableFalse = document.getElementById("avaialableFalse")
-
 function setPreviousProduct(){
     const selectedProduct = document.getElementById(selectedId);
     const cells = selectedProduct.cells;
@@ -183,12 +188,11 @@ function setPreviousProduct(){
     productName.value = cells[3].innerText
     price.value = cells[4].innerText
     if (cells[5].innerText.toLowerCase() === "true") {
-        avaialableTrue.checked = true
+        availableTrue.checked = true
     } else if (cells[5].innerText.toLowerCase() === "false") {
         availableFalse.checked = true
     }
 }
-
 
 
 function closeEditProduct(){
@@ -196,8 +200,8 @@ function closeEditProduct(){
     productId.value = "";
     productName.value = "";
     price.value = "";
-    avaialableTrue.value = "";
-    avaialableTrue.value = "";
+    availableTrue.checked = false;
+    availableFalse.checked = false;
 
     const dialog = document.getElementById("editProduct")
     dialog.classList.add("hidden");
@@ -208,6 +212,8 @@ async function submitProduct(){
     let title = document.getElementById("productTitle")
     let response;
     let message;
+    const checked = document.querySelector('input[name="availability"]:checked');
+    
 
     if (title.innerText.toLowerCase().includes("edit")){
         response = await database.patch("products", {
@@ -215,7 +221,7 @@ async function submitProduct(){
             "productId": productId.value,
             "name": productName.value,
             "price": price.value,
-            "available": Boolean(document.querySelector('input[name="availability"]:checked').value)
+            "available": String(checked ? checked.value === "true" : null)
         }, selectedId);
         message = "UPDATED";
 
@@ -225,12 +231,12 @@ async function submitProduct(){
             "productId": productId.value,
             "name": productName.value,
             "price": price.value,
-            "available": Boolean(document.querySelector('input[name="availability"]:checked').value)
+            "available": String(checked ? checked.value === "true" : null)
         })
         message = "ADDED";
     }
 
-    if (await response["status"] === "error") {
+    if (response["status"] === "error") {
         window.alert(`${response["message"]}`);
     } else {
         triggerSuccess(message);
@@ -241,6 +247,7 @@ async function submitProduct(){
 }
 
 // ========================================================================================
+// DELETE
 
 function openDelete(table, id){
     selectedTable = table;
@@ -267,6 +274,20 @@ function closeDelete(){
     dialog.classList.remove("flex");
 }
 
+// ========================================================================================
+// EXIT
+
+function openExit(table, id){
+    const dialog = document.getElementById("exitDialog")
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+}
+
+function closeExit(){
+    const dialog = document.getElementById("exitDialog")
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+}
 
 // 4. SUCCESS FEEDBACK (The Toast Notification)
 function triggerSuccess(message) {
@@ -300,16 +321,10 @@ function closeSales() { toggleModal('sales', false); }
 
 // 6. LOGOUT
 function exitDashboard() {
-    window.location.reload(); // Hard reset back to login screen
-}
-
-// LOGOUT FUNCTION
-function logout(){
     document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "resto= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
-    mainPanel.classList.toggle("hide");
-    location.reload();
+    window.location.reload();
 }
 
 // UPLOAD IMG
@@ -377,8 +392,10 @@ function checkIfEmpty(){
 function getImage() {
     return new Promise((resolve, reject) => {
         const file = imageInput.files[0] ? imageInput.files[0] : false;
-        if (!file) return reject(window.alert("No file selected"));
-
+        if (!file) {
+            window.alert("No file selected");
+            return reject(new Error("No file selected"));
+        }
         const reader = new FileReader();
 
         reader.onloadend = () => {
@@ -411,6 +428,7 @@ window.closeList = closeList;
 window.closeHistory = closeHistory;
 window.closeDetails = closeDetails;
 window.closeSales = closeSales;
+window.exitDashboard = exitDashboard;
 
 window.openEditCategory = openEditCategory;
 window.closeEditCategory = closeEditCategory;
@@ -429,3 +447,6 @@ window.closeUpload = closeUpload;
 window.addImg = addImg;
 window.replaceImg = replaceImg;
 window.removeImg = removeImg;
+
+window.openExit = openExit;
+window.closeExit = closeExit;

@@ -16,7 +16,7 @@ export class RenderProducts extends ColumnElements{
             <td class="py-6 px-6 font-bold text-gray-400 uppercase">${this.categoryId}</td>
             <td class="py-6 px-6 font-mono text-sm">${this.id}</td>
             <td class="py-6 px-6 font-black uppercase">${this.name}</td>
-            <td class="py-6 px-6 font-black text-[#76a609]">${this.price}</td>
+            <td class="py-6 px-6 font-black text-[#76a609]">${this.price.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</td>
             <td class="py-6 px-6"><span class="px-3 py-1 bg-[#f4f9e6] text-[#76a609] rounded-full text-[10px] font-black uppercase">${String(this.available).toUpperCase()}</span></td>
             <td class="py-6 px-6 text-center">
                 <button onclick="openUpload('${this.id}')" class="editImageButton text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline" value="${this.id}">Image</button>
