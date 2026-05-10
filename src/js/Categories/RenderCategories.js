@@ -4,7 +4,6 @@ export class RenderCategories extends ColumnElements{
     constructor(container, cat){
         super(container, cat.name, cat.category_id, 'categories');
         this.index = cat.display_index;
-        console.log(cat)
     }
 
     render(){      

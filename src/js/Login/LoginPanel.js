@@ -1,4 +1,4 @@
-import { database } from "../main.js";
+import { database, getCookie } from "../main.js";
 
 export class LoginPanel{
     constructor(){
@@ -11,7 +11,6 @@ export class LoginPanel{
     }
 
     async submit(){
-        console.log(this.username.value, this.password.value)
         let data = await database.post("login", {
             "username": this.username.value,
             "password": this.password.value
@@ -28,9 +27,9 @@ export class LoginPanel{
     }
 
     saveToCookie(data){
-        document.cookie = `token=${data["token"]}; max-age=${data["expiration"]}; path=/`
-        document.cookie = `name=${data["name"]}; max-age=${data["expiration"]}; path=/`
-        document.cookie = `resto=${data["resto"]}; max-age=${data["expiration"]}; path=/`
+        document.cookie = `token=${data["token"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
+        document.cookie = `name=${data["name"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
+        document.cookie = `resto=${data["resto"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
     }
 
     async checkToken(){
@@ -46,9 +45,13 @@ export class LoginPanel{
     
     showDashboard() {
         const login = document.getElementById("login");
-        login.classList.add("fade-out");
+        const username = document.getElementById("user")
+        const restoName = document.getElementById("restoName")
 
+        login.classList.add("fade-out");
         setTimeout(() => {
+            username.innerText = getCookie("name");
+            restoName.innerText = getCookie("resto");
             login.classList.add("hidden");
             document.getElementById("loading").classList.remove("hidden");
 

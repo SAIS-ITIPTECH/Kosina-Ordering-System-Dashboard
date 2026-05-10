@@ -15,7 +15,7 @@ export class RenderHistory extends ColumnElements{
             <td class="py-6 font-mono text-xs">${this.dailySaleId}</td>
             <td class="py-6 font-bold">${this.id}</td>
             <td class="py-6 text-gray-400">${this.date}</td>
-            <td class="py-6 font-black text-[#76a609]">${this.totalPrice}</td>
+            <td class="py-6 font-black text-[#76a609]">${this.totalPrice.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}</td>
             <td class="py-6 font-bold uppercase text-[10px]">${this.paymentMethod}</td>
             <td class="py-6"><span class="text-blue-500 font-black text-[10px] uppercase">${this.paid}</span></td>
         `, "hover:bg-gray-50 transition-colors");

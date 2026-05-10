@@ -57,6 +57,10 @@
             <p class="text-[#76a609] font-bold uppercase tracking-[0.3em] mb-2">Internal Management</p>
             <h2 class="text-gray-800 text-6xl font-black uppercase tracking-tighter">Kosina <span
                     class="text-[#76a609]">Dashboard</span></h2>
+            <h2 class="text-gray-800 text-sm font-black uppercase tracking-tighter">Establishment Name: <span
+                id="restoName" class="text-[#76a609]"></span></h2>
+            <h2 class="text-gray-800 text-sm font-black uppercase tracking-tighter">Username: <span
+                id="user" class="text-[#76a609]"></span></h2>
         </header>
 
         <nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
@@ -128,7 +132,7 @@
 
     <!------------------------------------ EXIT BUTTON ------------------------------------>
 
-            <button onclick="exitDashboard()"
+            <button onclick="openExit()"
                 class="group bg-red-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-red-100 hover:shadow-2xl hover:scale-105 transition-all">
                 <div class="p-4 bg-white rounded-2xl">
                     <span class="text-4xl">🚪</span>
@@ -387,7 +391,7 @@
                         Status</p>
                     <div class="flex gap-4">
                         <label class="flex-1 cursor-pointer group">
-                            <input id="avaialableTrue" type="radio" name="availability" value="true" class="hidden peer" checked>
+                            <input id="availableTrue" type="radio" name="availability" value="true" class="hidden peer">
                             <div
                                 class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-[#76a609] peer-checked:bg-[#f4f9e6] transition-all">
                                 <span
@@ -395,7 +399,7 @@
                             </div>
                         </label>
                         <label class="flex-1 cursor-pointer group">
-                            <input id="avaialableFalse" type="radio" name="availability" value="false" class="hidden peer">
+                            <input id="availableFalse" type="radio" name="availability" value="false" class="hidden peer">
                             <div
                                 class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
                                 <span
@@ -427,13 +431,31 @@
                 class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
                 ⚠️</div>
             <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
+             <p class="text-gray-400 text-sm mb-8 font-medium">You may contact the developers to undo thsi decision.</p>
             <div class="flex flex-col gap-3">
                 <button onclick="deleteItem()"
-                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Delete
-                    Permanently</button>
+                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Delete</button>
                 <button onclick="closeDelete()"
                     class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Keep
                     Item</button>
+            </div>
+        </div>
+    </dialog>
+    
+    <!------------------------------------ EXIT DASHBOARD ------------------------------------>
+
+    <dialog id="exitDialog"
+        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
+        <div class="bg-white w-full max-w-sm rounded-[3rem] shadow-2xl p-12 text-center modal-content">
+            <div
+                class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
+                ⚠️</div>
+            <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
+            <div class="flex flex-col gap-3">
+                <button onclick="exitDashboard()"
+                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Log Out</button>
+                <button onclick="closeExit()"
+                    class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Go Back</button>
             </div>
         </div>
     </dialog>
