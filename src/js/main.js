@@ -53,11 +53,7 @@ function openEditList(id) {
     dialog.classList.remove("hidden");
     dialog.classList.add("flex");
 }
-function closeEditList(id) {
-    const dialog = document.getElementById('id');
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
+
 
 // 4. SUCCESS FEEDBACK (The Toast Notification)
 function triggerSuccess(parentId) {
