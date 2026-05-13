@@ -266,9 +266,9 @@ async function submitProduct(){
 // ========================================================================================
 // Confir Payment Dialogue
 
-async function confirmPayment(id, this){
-    if (this.innerText === "PAID") {
-        console.alert("this order is already paid!")
+async function confirmPayment(id, event){
+    if (event.innerText === "PAID") {
+        window.alert("this order is already paid!")
     } else {
         await database.patch("confirmCash", null, id);
     }
