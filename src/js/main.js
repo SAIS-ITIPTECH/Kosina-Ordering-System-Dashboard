@@ -42,7 +42,25 @@ const columnMap = {
     "sales": document.getElementById("saleColumns")
 }
 
-// 2. UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
+// ========================================================================================
+// LEGACY WRAPPERS (So your existing button clicks still work)
+function openMenu() { toggleModal('categories', true); }
+function closeMenu() { toggleModal('categories', false); }
+
+function openList() { toggleModal('products', true); }
+function closeList() { toggleModal('products', false); }
+
+function openHistory() { toggleModal('history', true); }
+function closeHistory() { toggleModal('history', false); }
+
+function openDetails() { toggleModal('details', true); }
+function closeDetails() { toggleModal('details', false); }
+
+function openSales() { toggleModal('sales', true); }
+function closeSales() { toggleModal('sales', false); }
+
+// ========================================================================================
+// UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
 function toggleModal(id, show) {
     const overlay = document.getElementById("modalOverlay");
     const modal = document.getElementById(id);
@@ -194,7 +212,6 @@ function setPreviousProduct(){
     }
 }
 
-
 function closeEditProduct(){
     productCatId.value = "";
     productId.value = "";
@@ -247,6 +264,17 @@ async function submitProduct(){
 }
 
 // ========================================================================================
+// Confir Payment Dialogue
+
+async function confirmPayment(id, this){
+    if (this.innerText === "PAID") {
+        console.alert("this order is already paid!")
+    } else {
+        await database.patch("confirmCash", null, id);
+    }
+}
+
+// ========================================================================================
 // DELETE
 
 function openDelete(table, id){
@@ -274,7 +302,7 @@ function closeDelete(){
     dialog.classList.remove("flex");
 }
 
-// ========================================================================================
+
 // EXIT
 
 function openExit(table, id){
@@ -289,7 +317,9 @@ function closeExit(){
     dialog.classList.remove("flex");
 }
 
+// ========================================================================================
 // 4. SUCCESS FEEDBACK (The Toast Notification)
+
 function triggerSuccess(message) {
     const toast = document.getElementById("successDihh");
     toast.classList.remove("hidden");
@@ -303,23 +333,10 @@ function triggerSuccess(message) {
     }, 2500);
 }
 
-// 5. LEGACY WRAPPERS (So your existing button clicks still work)
-function openMenu() { toggleModal('categories', true); }
-function closeMenu() { toggleModal('categories', false); }
 
-function openList() { toggleModal('products', true); }
-function closeList() { toggleModal('products', false); }
-
-function openHistory() { toggleModal('history', true); }
-function closeHistory() { toggleModal('history', false); }
-
-function openDetails() { toggleModal('details', true); }
-function closeDetails() { toggleModal('details', false); }
-
-function openSales() { toggleModal('sales', true); }
-function closeSales() { toggleModal('sales', false); }
-
+// ========================================================================================
 // 6. LOGOUT
+
 function exitDashboard() {
     document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
@@ -327,7 +344,9 @@ function exitDashboard() {
     window.location.reload();
 }
 
+// ========================================================================================
 // UPLOAD IMG
+
 const imageInput = document.getElementById("imageInput");
 
 function openUpload(id){
@@ -418,6 +437,8 @@ function imgResults(data){
     }
 }
 
+// ========================================================================================
+
 window.openMenu = openMenu;
 window.openList = openList;
 window.openHistory = openHistory;
@@ -447,6 +468,8 @@ window.closeUpload = closeUpload;
 window.addImg = addImg;
 window.replaceImg = replaceImg;
 window.removeImg = removeImg;
+
+window.confirmPayment = confirmPayment;
 
 window.openExit = openExit;
 window.closeExit = closeExit;
