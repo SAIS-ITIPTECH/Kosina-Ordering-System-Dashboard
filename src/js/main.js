@@ -438,6 +438,12 @@ function imgResults(data){
 }
 
 // ========================================================================================
+//  LIVE ORDER LIST
+function openLiveOrder(){
+ console.log("live order opened")
+}
+
+// ========================================================================================
 
 window.openMenu = openMenu;
 window.openList = openList;
@@ -454,6 +460,8 @@ window.exitDashboard = exitDashboard;
 window.openEditCategory = openEditCategory;
 window.closeEditCategory = closeEditCategory;
 window.submitCategory = submitCategory;
+
+window.openLiveOrder = openLiveOrder;
 
 window.openEditProduct = openEditProduct;
 window.closeEditProduct = closeEditProduct;
