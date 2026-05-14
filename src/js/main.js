@@ -5,6 +5,7 @@ import { Products } from "./Products/Products.js";
 import { History } from "./History/History.js";
 import { Details } from "./Details/Details.js";
 import { DailySales } from "./DailySales/DailySales.js";
+import { ActiveOrder } from "./ActiveOrder/ActiveOrder.js";
 
 
 export const database = new DatabaseConnector();
@@ -61,8 +62,9 @@ function closeSales() { toggleModal('sales', false); }
 
 // ========================================================================================
 // UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
+const overlay = document.getElementById("modalOverlay");
+
 function toggleModal(id, show) {
-    const overlay = document.getElementById("modalOverlay");
     const modal = document.getElementById(id);
     const columnContainer = columnMap[id];
 
@@ -439,8 +441,41 @@ function imgResults(data){
 
 // ========================================================================================
 //  LIVE ORDER LIST
-function openLiveOrder(){
- console.log("live order opened")
+const activeOrderPanel = document.getElementById("activeOrder");
+const activeOrderContainer = document.getElementById("activeOrderContainer");
+const dashboard = document.getElementById("dashboard");
+
+function openActive(){
+    console.log("live order opened")
+    activeOrderPanel.classList.remove("hidden");
+    activeOrderPanel.classList.add("flex");
+    overlay.classList.add("hidden");
+    overlay.classList.remove("flex");
+    dashboard.classList.add("hidden");
+    dashboard.classList.remove("flex");
+
+    displayActives()
+    
+}
+
+async function displayActives(params){
+    let actives = new ActiveOrder(activeOrderContainer);
+    actives.displayAll();
+}
+
+async function orderServed(id){
+    let response = await database.patch("liveorder", null, id)
+    window.alert(`${response["message"]}`)
+}
+
+function closeActive(){
+    console.log("live order closed")
+    activeOrderPanel.classList.add("hidden");
+    activeOrderPanel.classList.remove("flex");
+    overlay.classList.remove("hidden");
+    overlay.classList.add("flex");
+    dashboard.classList.remove("hidden");
+    dashboard.classList.add("flex");
 }
 
 // ========================================================================================
@@ -461,7 +496,9 @@ window.openEditCategory = openEditCategory;
 window.closeEditCategory = closeEditCategory;
 window.submitCategory = submitCategory;
 
-window.openLiveOrder = openLiveOrder;
+window.openActive = openActive;
+window.closeActive = closeActive;
+window.orderServed = orderServed;
 
 window.openEditProduct = openEditProduct;
 window.closeEditProduct = closeEditProduct;
