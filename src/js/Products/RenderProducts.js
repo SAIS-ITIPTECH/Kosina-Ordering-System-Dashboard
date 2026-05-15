@@ -21,7 +21,7 @@ export class RenderProducts extends ColumnElements{
             <td class="py-6 px-6 text-center">
                 <button onclick="openUpload('${this.id}')" class="editImageButton text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline" value="${this.id}">Image</button>
                 <button onclick="openEditProduct('edit', '${this.id}')" class="editButton text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline" value="${this.id}">Edit</button>
-                 <button onclick="openDelete('products', '${this.id}')" class="editButton text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline" value="${this.id}">Delete</button>
+                 <button onclick="openDelete(['products', '${this.id}'])" class="editButton text-[#76a609] font-black text-[10px] uppercase tracking-widest hover:underline" value="${this.id}">Delete</button>
             </td>
         `,);
     }

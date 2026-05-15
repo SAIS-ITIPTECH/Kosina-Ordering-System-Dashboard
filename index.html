@@ -250,12 +250,6 @@
                     <tbody class="divide-y" id="historyColumns"></tbody>
                 </table>
             </div>
-            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="openActive()"
-                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
-                    Open Live Orders
-                </button>
-            </footer>
         </section>
 
         <!------------------------------------ DETAILS DASHBOARD ------------------------------------>
@@ -281,6 +275,12 @@
             <button onclick="closeDetails()"
                 class="mt-8 bg-gray-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all">Close
                 Viewer</button>
+            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
+                <button onclick="openActive()"
+                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
+                    Open Live Orders
+                </button>
+            </footer>
         </section>
 
         <!------------------------------------ DAILY SALES DASHBOARD ------------------------------------>
@@ -427,28 +427,8 @@
 
         
     </dialog>
-
-    <!------------------------------------ DELETE DASHBOARD ------------------------------------>
-
-    <dialog id="deleteItem"
-        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
-        <div class="bg-white w-full max-w-sm rounded-[3rem] shadow-2xl p-12 text-center modal-content">
-            <div
-                class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
-                ⚠️</div>
-            <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
-             <p class="text-gray-400 text-sm mb-8 font-medium">You may contact the developers to undo thsi decision.</p>
-            <div class="flex flex-col gap-3">
-                <button onclick="deleteItem()"
-                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Delete</button>
-                <button onclick="closeDelete()"
-                    class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Keep
-                    Item</button>
-            </div>
-        </div>
-    </dialog>
     
-    <!------------------------------------ EXIT DASHBOARD ------------------------------------>
+    <!------------------------------------ CONFIRM DIALOGUE ------------------------------------>
 
     <dialog id="exitDialog"
         class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
@@ -457,10 +437,12 @@
                 class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
                 ⚠️</div>
             <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
+            <p id="confirmMessage" class="text-gray-400 text-sm mb-8 font-medium">.</p>
             <div class="flex flex-col gap-3">
-                <button onclick="exitDashboard()"
-                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all">Log Out</button>
-                <button onclick="closeExit()"
+                <button id="confirmButton"
+                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all"></button>
+                <button onclick="closeConfirm()"
+                    id="backButton"
                     class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Go Back</button>
             </div>
         </div>

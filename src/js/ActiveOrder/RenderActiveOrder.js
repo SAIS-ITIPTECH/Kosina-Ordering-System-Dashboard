@@ -21,7 +21,6 @@ export class RenderActiveOrder extends ColumnElements{
                 </tr>
             `
         });
-        console.log(ordersHtml)
 
         const activeOrder = document.createElement("table")
         activeOrder.innerHTML = `
@@ -34,7 +33,7 @@ export class RenderActiveOrder extends ColumnElements{
                 ${ordersHtml}
                 <tr>
                     <td>
-                        <button onclick="orderServed('${this.id}')">COMPLETE ORDER</button>
+                        <button onclick="openServed('${this.id}')">COMPLETE ORDER</button>
                     </td>
                 </tr>
             </tbody>

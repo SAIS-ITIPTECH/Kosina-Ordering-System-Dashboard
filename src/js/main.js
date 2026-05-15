@@ -265,37 +265,6 @@ async function submitProduct(){
     }
 }
 
-// ========================================================================================
-// Confir Payment Dialogue
-
-async function confirmPayment(id, event){
-    if (event.innerText === "PAID") {
-        window.alert("this order is already paid!")
-    } else {
-        await database.patch("confirmCash", null, id);
-    }
-}
-
-// ========================================================================================
-// DELETE
-
-function openDelete(table, id){
-    selectedTable = table;
-    selectedId = id;
-    const dialog = document.getElementById("deleteItem")
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-}
-
-async function deleteItem(){
-    const response = await database.delete(selectedTable, selectedId)
-    window.alert(`${await response["message"]}`);
-
-    const table = new modalMap[selectedTable](columnMap[selectedTable])
-    table.displayAll();
-    closeDelete();
-}
-
 function closeDelete(){
     selectedId = null;
     selectedTable = null;
@@ -304,20 +273,6 @@ function closeDelete(){
     dialog.classList.remove("flex");
 }
 
-
-// EXIT
-
-function openExit(table, id){
-    const dialog = document.getElementById("exitDialog")
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-}
-
-function closeExit(){
-    const dialog = document.getElementById("exitDialog")
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
 
 // ========================================================================================
 // 4. SUCCESS FEEDBACK (The Toast Notification)
@@ -335,15 +290,74 @@ function triggerSuccess(message) {
     }, 2500);
 }
 
-
 // ========================================================================================
-// 6. LOGOUT
+// CONFIRM DIALOGUE
+
+const confirmButton = document.getElementById("confirmButton");
+const confirmMessage = document.getElementById("confirmMessage");
+
+function openDelete(util){
+    const buttonName = (util[0] === "categories") ? "category" : "product";
+    openConfirm(`Delete ${buttonName}`, deleteItem, util, "You may contact the developers to undo this decision.")
+}
+
+function openExit(){ openConfirm( "Log Out", exitDashboard ) }
+
+function openPaid(util){ 
+    if (util[1].innerText === "PAID") {
+        window.alert("this order is already paid!")
+    } else {
+        openConfirm( "Confirm Paid", confirmPaid, util ); 
+    }
+}
+
+function openServed(util){ openConfirm( "FINISH ORDER", orderServed, util)}
+
+function openConfirm( text, func, util = null, body = null){
+    const dialog = document.getElementById("exitDialog")
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+    confirmButton.onclick = () => {
+        func(util)
+    };
+    confirmButton.innerText = text;
+    confirmMessage.innerText = body;
+}
+
+function closeConfirm(){ 
+    const dialog = document.getElementById("exitDialog")
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+}
+
+async function deleteItem([table, id]){
+    const response = await database.delete(table, id);
+    window.alert(`${await response["message"]}`);
+
+    const newTable = new modalMap[table](columnMap[table]);
+    newTable.displayAll();
+    closeConfirm();
+}
+
+async function confirmPaid([id]){
+    await database.patch("confirmCash", null, id);
+    const history = new History(document.getElementById("historyColumns"))
+    history.displayAll();
+    closeConfirm();
+}
 
 function exitDashboard() {
     document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     document.cookie = "resto= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
     window.location.reload();
+}
+
+async function orderServed(id){
+    let response = await database.patch("liveorder", null, id)
+    window.alert(`${response["message"]}`)
+    displayActives();
+    closeConfirm();
 }
 
 // ========================================================================================
@@ -446,16 +460,13 @@ const activeOrderContainer = document.getElementById("activeOrderContainer");
 const dashboard = document.getElementById("dashboard");
 
 function openActive(){
-    console.log("live order opened")
     activeOrderPanel.classList.remove("hidden");
     activeOrderPanel.classList.add("flex");
     overlay.classList.add("hidden");
     overlay.classList.remove("flex");
     dashboard.classList.add("hidden");
     dashboard.classList.remove("flex");
-
     displayActives()
-    
 }
 
 async function displayActives(params){
@@ -463,13 +474,8 @@ async function displayActives(params){
     actives.displayAll();
 }
 
-async function orderServed(id){
-    let response = await database.patch("liveorder", null, id)
-    window.alert(`${response["message"]}`)
-}
 
 function closeActive(){
-    console.log("live order closed")
     activeOrderPanel.classList.add("hidden");
     activeOrderPanel.classList.remove("flex");
     overlay.classList.remove("hidden");
@@ -498,15 +504,16 @@ window.submitCategory = submitCategory;
 
 window.openActive = openActive;
 window.closeActive = closeActive;
-window.orderServed = orderServed;
 
 window.openEditProduct = openEditProduct;
 window.closeEditProduct = closeEditProduct;
 window.submitProduct = submitProduct;
+window.openServed = openServed;
+
 
 window.openDelete = openDelete;
 window.deleteItem = deleteItem;
-window.closeDelete = closeDelete;
+window.openPaid = openPaid;
 
 window.openUpload = openUpload;
 window.closeUpload = closeUpload;
@@ -514,7 +521,5 @@ window.addImg = addImg;
 window.replaceImg = replaceImg;
 window.removeImg = removeImg;
 
-window.confirmPayment = confirmPayment;
-
 window.openExit = openExit;
-window.closeExit = closeExit;
+window.closeConfirm = closeConfirm;
