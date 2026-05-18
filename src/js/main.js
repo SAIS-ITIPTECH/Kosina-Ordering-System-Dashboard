@@ -7,15 +7,13 @@ import { Details } from "./Details/Details.js";
 import { DailySales } from "./DailySales/DailySales.js";
 import { ActiveOrder } from "./ActiveOrder/ActiveOrder.js";
 
-
 export const database = new DatabaseConnector();
 
-
-export function getCookie(cookieName){
+export function getCookie(cookieName) {
     const cookies = document.cookie.split(';');
-    for(const cookie of cookies){
+    for (const cookie of cookies) {
         const [name, value] = cookie.split('=');
-        if(name.trim() === cookieName){
+        if (name.trim() === cookieName) {
             return decodeURIComponent(value);
         }
     }
@@ -27,499 +25,336 @@ loginPanel.checkToken();
 
 let activeParentModal = null;
 
-const modalMap = {
-    'categories': Categories,
-    'products': Products,
-    'history': History,
-    'details': Details,
-    "sales": DailySales
+const screenLoaders = {
+    'order-screen': { Module: Details, containerId: 'detailColumns' },
+    'sales-screen': { Module: DailySales, containerId: 'saleColumns' },
+    'category-screen': { Module: Categories, containerId: 'categoryColumns' },
+    'products-screen': { Module: Products, containerId: 'productsColumns' },
+    'history-screen': { Module: History, containerId: 'historyColumns' },
+    'live-screen': { Module: ActiveOrder, containerId: 'live-orders-table-body' }
 };
 
-const columnMap = {
-    'categories': document.getElementById("categoryColumns"),
-    'products': document.getElementById("productColumns"),
-    'history': document.getElementById("historyColumns"),
-    'details': document.getElementById("detailColumns"),
-    "sales": document.getElementById("saleColumns")
+async function loadScreenData(targetId) {
+    const loader = screenLoaders[targetId];
+    if (!loader) return;
+
+    const container = document.getElementById(loader.containerId);
+    if (!container) return;
+
+    const instance = new loader.Module(container);
+    await instance.displayAll();
 }
 
-// ========================================================================================
-// LEGACY WRAPPERS (So your existing button clicks still work)
-function openMenu() { toggleModal('categories', true); }
-function closeMenu() { toggleModal('categories', false); }
+// ===============================================================
+// FOR SWITCHING SCREENS
+document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.nav-btn');
+    const screens = document.querySelectorAll('.tab-content');
 
-function openList() { toggleModal('products', true); }
-function closeList() { toggleModal('products', false); }
+    buttons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const targetId = button.getAttribute('data-target');
 
-function openHistory() { toggleModal('history', true); }
-function closeHistory() { toggleModal('history', false); }
+            screens.forEach(screen => {
+                screen.classList.add('hidden');
+            });
 
-function openDetails() { toggleModal('details', true); }
-function closeDetails() { toggleModal('details', false); }
+            const targetScreen = document.getElementById(targetId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+            }
 
-function openSales() { toggleModal('sales', true); }
-function closeSales() { toggleModal('sales', false); }
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-[#76a609]');
+            });
 
-// ========================================================================================
-// UNIFIED MODAL SYSTEM (Opens Category, History, Sales, etc.)
-const overlay = document.getElementById("modalOverlay");
+            button.classList.add('bg-[#76a609]');
+            await loadScreenData(targetId);
+        });
+    });
+});
 
-function toggleModal(id, show) {
-    const modal = document.getElementById(id);
-    const columnContainer = columnMap[id];
+// ===============================================================
+// DROPDOWN ELLIPSIS
+const moreBtn = document.getElementById('more-btn');
+const dropdownMenu = document.getElementById('dropdown-menu');
 
+moreBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    dropdownMenu.classList.toggle('hidden');
+});
 
-    if (show) {
-        let modalContents = new modalMap[id](columnContainer);
-        modalContents.displayAll();
-        overlay.classList.remove("hidden");
-        overlay.classList.add("flex");
-        modal.classList.remove("hidden");
-    } else {
-        columnContainer.innerText = "";
-        overlay.classList.add("hidden");
-        overlay.classList.remove("flex");
-        modal.classList.add("hidden");
-    }
-}
+document.addEventListener('click', () => {
+    dropdownMenu.classList.add('hidden');
+});
 
+// Helper to capitalize strings
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// ===================================================================
-// DIALOGUES
+// Global variable tracking items selected for modification
+let selectedId = null;
+let currentProductImageBase64 = null;
 
-// ===================================================================
-// EDIT CATEGORY DIALOGUES
-
-
-let selectedId;
-let selectedTable;
-
-function openEditCategory(method, id = false){
-    const dialog = document.getElementById("editCategory")
-    const title = document.getElementById("categoryTitle");
-    title.innerHTML = `
-        ${capitalize(method)} <span class="text-[#76a609]">Category</span>
-    `
-    if (id) { 
-        selectedId = id;
-        setPreviousCategory(id); 
-    }
-
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-}
-
-const displayIndex = document.getElementById("displayIndex");
-const categoryName = document.getElementById("categoryName");
-const categoryId = document.getElementById("categoryId");
-
-function setPreviousCategory(id){
-    const selectedCategory = document.getElementById(id);
-    const cells = selectedCategory.cells;
-    displayIndex.value = cells[0].innerText;
-    categoryName.value = cells[1].innerText;
-    categoryId.value = cells[2].innerText;
-}
-
-function closeEditCategory(){
-    displayIndex.value = "";
-    categoryName.value = "";
-    categoryId.value = "";
-
-    const dialog = document.getElementById("editCategory")
-    selectedId = null;
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
-
-async function submitCategory(){
-    const title = document.getElementById("categoryTitle");
-    let response;
-    let message;
-    if (title.innerText.toLowerCase().includes("edit")){
-        response = await database.patch("categories", {
-            "displayIndex": displayIndex.value,
-            "name": categoryName.value,
-            "categoryId": categoryId.value
-        }, selectedId);
-        message = "UPDATED";
-    } else if ((title.innerText.toLowerCase().includes("add"))) {
-        response = await database.post("categories", {
-            "displayIndex": displayIndex.value,
-            "name": categoryName.value,
-            "categoryId": categoryId.value
-        })
-        message = "ADDED";
-    }
-
-    if (response["status"] === "error") {
-        window.alert(`${response["message"]}`);
-    } else {
-        triggerSuccess(message);
-        closeEditCategory();
-        const categories = new Categories(document.getElementById("categoryColumns"))
-        categories.displayAll();
-    }
-}
-
-// ===================================================================
-// EDIT PRODUCT DIALOGUE
-
-const productCatId = document.getElementById("productCatId")
-const productId = document.getElementById("productId")
-const productName = document.getElementById("productName")
-const price = document.getElementById("price")
-const availableTrue = document.getElementById("availableTrue")
-const availableFalse = document.getElementById("availableFalse")
-
-async function openEditProduct(method, id = false){
-    const dialog = document.getElementById("editProduct")
-    const title = document.getElementById("productTitle");
-    title.innerHTML = `
-        ${capitalize(method)} <span class="text-[#76a609]">Product</span>
-    `
-
-    let choices = ``;
-    let categories = await database.get('categories')
-    categories.forEach(element => {
-        choices += `<option value="${element["category_id"]}">${element["category_id"]}</option>`
-    });
-    productCatId.innerHTML = choices;
-
-    if (id) { 
-        selectedId = id;
-        setPreviousProduct(); 
-    }
-
-   
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-}
-
-function setPreviousProduct(){
-    const selectedProduct = document.getElementById(selectedId);
-    const cells = selectedProduct.cells;
-    
-    productCatId.selectedIndex = [...productCatId.options].findIndex(opt => opt.innerText === cells[1].innerText);
-    productId.value = cells[2].innerText
-    productName.value = cells[3].innerText
-    price.value = cells[4].innerText
-    if (cells[5].innerText.toLowerCase() === "true") {
-        availableTrue.checked = true
-    } else if (cells[5].innerText.toLowerCase() === "false") {
-        availableFalse.checked = true
-    }
-}
-
-function closeEditProduct(){
-    productCatId.value = "";
-    productId.value = "";
-    productName.value = "";
-    price.value = "";
-    availableTrue.checked = false;
-    availableFalse.checked = false;
-
-    const dialog = document.getElementById("editProduct")
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
-
-async function submitProduct(){
-    let title = document.getElementById("productTitle")
-    let response;
-    let message;
-    const checked = document.querySelector('input[name="availability"]:checked');
-    
-
-    if (title.innerText.toLowerCase().includes("edit")){
-        response = await database.patch("products", {
-            "categoryId": productCatId.value,
-            "productId": productId.value,
-            "name": productName.value,
-            "price": price.value,
-            "available": String(checked ? checked.value === "true" : null)
-        }, selectedId);
-        message = "UPDATED";
-
-    } else if ((title.innerText.toLowerCase().includes("add"))) {
-        response = await database.post("products", {
-            "categoryId": productCatId.value,
-            "productId": productId.value,
-            "name": productName.value,
-            "price": price.value,
-            "available": String(checked ? checked.value === "true" : null)
-        })
-        message = "ADDED";
-    }
-
-    if (response["status"] === "error") {
-        window.alert(`${response["message"]}`);
-    } else {
-        triggerSuccess(message);
-        closeEditProduct();
-        const products = new Products(document.getElementById("productColumns"))
-        products.displayAll();
-    }
-}
-
-function closeDelete(){
-    selectedId = null;
-    selectedTable = null;
-    const dialog = document.getElementById("deleteItem")
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
-
-
-// ========================================================================================
-// 4. SUCCESS FEEDBACK (The Toast Notification)
-
-function triggerSuccess(message) {
-    const toast = document.getElementById("successDihh");
-    toast.classList.remove("hidden");
-    toast.classList.add("flex");
-
-    document.getElementById("successMsg").innerText = `${message} SUCCESSFULLY`
-
-    setTimeout(() => {
-        toast.classList.add("hidden");
-        toast.classList.remove("flex");
-    }, 2500);
-}
-
-// ========================================================================================
-// CONFIRM DIALOGUE
-
-const confirmButton = document.getElementById("confirmButton");
-const confirmMessage = document.getElementById("confirmMessage");
-
-function openDelete(util){
-    const buttonName = (util[0] === "categories") ? "category" : "product";
-    openConfirm(`Delete ${buttonName}`, deleteItem, util, "You may contact the developers to undo this decision.")
-}
-
-function openExit(){ openConfirm( "Log Out", exitDashboard ) }
-
-function openPaid(util){ 
-    if (util[1].innerText === "PAID") {
-        window.alert("this order is already paid!")
-    } else {
-        openConfirm( "Confirm Paid", confirmPaid, util ); 
-    }
-}
-
-function openServed(util){ openConfirm( "FINISH ORDER", orderServed, util)}
-
-function openConfirm( text, func, util = null, body = null){
-    const dialog = document.getElementById("exitDialog")
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-    confirmButton.onclick = () => {
-        func(util)
-    };
-    confirmButton.innerText = text;
-    confirmMessage.innerText = body;
-}
-
-function closeConfirm(){ 
-    const dialog = document.getElementById("exitDialog")
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
-
-async function deleteItem([table, id]){
-    const response = await database.delete(table, id);
-    window.alert(`${await response["message"]}`);
-
-    const newTable = new modalMap[table](columnMap[table]);
-    newTable.displayAll();
-    closeConfirm();
-}
-
-async function confirmPaid([id]){
-    await database.patch("confirmCash", null, id);
-    const history = new History(document.getElementById("historyColumns"))
-    history.displayAll();
-    closeConfirm();
-}
-
-function exitDashboard() {
-    document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
-    document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
-    document.cookie = "resto= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
-    window.location.reload();
-}
-
-async function orderServed(id){
-    let response = await database.patch("liveorder", null, id)
-    window.alert(`${response["message"]}`)
-    displayActives();
-    closeConfirm();
-}
-
-// ========================================================================================
-// UPLOAD IMG
-
-const imageInput = document.getElementById("imageInput");
-
-function openUpload(id){
-    selectedId = id
-    const dialog = document.getElementById("UploadPanel")
-    dialog.classList.remove("hidden");
-    dialog.classList.add("flex");
-}
-
-function closeUpload(){
-    selectedId = null;
-    const dialog = document.getElementById("UploadPanel")
-    dialog.classList.add("hidden");
-    dialog.classList.remove("flex");
-}
-
-async function addImg(){
-    if (checkIfEmpty().includes("null")) {
-        const img64 = await getImage() || false;
-        if (!img64) { return; }
-        const data = await database.post("image", {
-            "image": img64,
-            "productId": selectedId,
-        })
-        imgResults(data);
-        closeUpload();
-    } else {
-        window.alert("THIS PRODUCT HAS ALREADY IMAGE!");
-    }
-}
-
-async function replaceImg(){
-    if (checkIfEmpty().includes("null")) {
-            window.alert("THIS PRODUCT HAS NO IMAGE!");
-    } else {
-        const img64 = await getImage() || false;
-        if (!img64) { return; }
-        const data = await database.patch("image", {
-            "image": img64,
-            "productId": selectedId,
-            "imageId": document.getElementById(`${selectedId}Img`).alt
-        }, selectedId)
-        imgResults(data);
-        closeUpload();
-    }
-}
-
-async function removeImg(){
-    if (checkIfEmpty().includes("null")) {
-        window.alert("THIS PRODUCT HAS NO IMAGE!");
-    } else {
-        const data = await database.delete("image", document.getElementById(`${selectedId}Img`).alt)
-        imgResults(data);
-        closeUpload();
-    }
-}
-
-function checkIfEmpty(){
-    return document.getElementById(`${selectedId}Img`).src
-}
-
-function getImage() {
+// Helper to convert files into Base64 strings safely
+function fileToBase64(file) {
     return new Promise((resolve, reject) => {
-        const file = imageInput.files[0] ? imageInput.files[0] : false;
-        if (!file) {
-            window.alert("No file selected");
-            return reject(new Error("No file selected"));
-        }
         const reader = new FileReader();
-
-        reader.onloadend = () => {
-            resolve(reader.result);
-        };
-
-        reader.onerror = reject;
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
         reader.readAsDataURL(file);
     });
 }
 
-function imgResults(data){
-    if (data["status"] === "error") {
-        window.alert(`${data["message"]}`);
+// Handle Image changes in the form UI
+window.handleImageUpload = async function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        currentProductImageBase64 = await fileToBase64(file);
+        const previewImg = document.getElementById("productImagePreview");
+        previewImg.src = currentProductImageBase64;
+        previewImg.classList.remove("hidden");
     }
-    else{
-        window.alert(`${data["message"]}`);
-        let newDashboard = new Products(columnMap["products"])
-        newDashboard.displayAll()
+};
+
+// ===================================================================
+// EDIT & ADD CATEGORY DIALOGUES
+window.openEditCategory = function (method, id = false) {
+    const dialog = document.getElementById("addCat-screen");
+    const title = document.getElementById("categoryTitle");
+
+    title.innerHTML = `${capitalize(method)} <span class="text-[#76a609]">Category</span>`;
+
+    if (id) {
+        selectedId = id;
+        setPreviousCategory(id);
+    } else {
+        selectedId = null;
+    }
+
+    document.getElementById("category-screen").classList.add("hidden");
+    dialog.classList.remove("hidden");
+};
+
+function setPreviousCategory(id) {
+    const selectedCategory = document.getElementById(id);
+    if (!selectedCategory) return;
+
+    const cells = selectedCategory.cells;
+    document.getElementById("displayIndex").value = cells[0].innerText;
+    document.getElementById("categoryName").value = cells[1].innerText;
+    document.getElementById("categoryId").value = cells[2].innerText;
+}
+
+window.closeEditCategory = function () {
+    document.getElementById("displayIndex").value = "";
+    document.getElementById("categoryName").value = "";
+    document.getElementById("categoryId").value = "";
+    selectedId = null;
+
+    document.getElementById("addCat-screen").classList.add("hidden");
+    document.getElementById("category-screen").classList.remove("hidden");
+};
+
+window.submitCategory = async function () {
+    const title = document.getElementById("categoryTitle");
+    const displayIndex = document.getElementById("displayIndex").value;
+    const categoryName = document.getElementById("categoryName").value;
+    const categoryId = document.getElementById("categoryId").value;
+
+    let response;
+    let message;
+
+    if (title.innerText.toLowerCase().includes("edit")) {
+        response = await database.patch("categories", {
+            "displayIndex": displayIndex,
+            "name": categoryName,
+            "categoryId": categoryId
+        }, selectedId);
+        message = "UPDATED";
+    } else {
+        response = await database.post("categories", {
+            "displayIndex": displayIndex,
+            "name": categoryName,
+            "categoryId": categoryId
+        });
+        message = "ADDED";
+    }
+
+    if (response && response["status"] === "error") {
+        window.alert(`${response["message"]}`);
+    } else {
+        window.alert(`Category ${message} SUCCESSFULLY!`);
+        window.closeEditCategory();
+
+        const categories = new Categories(document.getElementById("categoryColumns"));
+        await categories.displayAll();
+    }
+};
+
+// ===================================================================
+// DELETE CATEGORY LOGIC
+window.openDelete = async function (util) {
+    const [endpoint, id] = util;
+
+    const confirmation = window.confirm("Are you sure you want to delete this category?");
+    if (confirmation) {
+        let response = await database.delete(endpoint, id);
+
+        if (response && response["status"] === "error") {
+            window.alert(`${response["message"]}`);
+        } else {
+            window.alert("DELETED SUCCESSFULLY!");
+            const categories = new Categories(document.getElementById("categoryColumns"));
+            await categories.displayAll();
+        }
+    }
+};
+
+// ===================================================================
+// EDIT & ADD PRODUCT DIALOGUES
+window.openEditProduct = async function (method, id = false) {
+    const dialog = document.getElementById("addPro-screen");
+    const title = document.getElementById("productFormTitle");
+
+    title.innerHTML = `${capitalize(method)} <span class="text-[#76a609]">Product</span>`;
+
+    // Clear image cache variables and display defaults
+    currentProductImageBase64 = null;
+    const previewImg = document.getElementById("productImagePreview");
+    previewImg.src = "";
+    previewImg.classList.add("hidden");
+    document.getElementById("productImageInput").value = "";
+
+    // Fetch and dynamically fill Category selection element
+    const selectElement = document.getElementById("productCatId");
+    selectElement.innerHTML = "";
+    try {
+        const categoriesList = await database.get("categories");
+        if (categoriesList && Array.isArray(categoriesList)) {
+            categoriesList.forEach(cat => {
+                const opt = document.createElement("option");
+                opt.value = cat.categoryId;
+                opt.textContent = cat.name;
+                selectElement.appendChild(opt);
+            });
+        }
+    } catch (err) {
+        console.error("Could not fetch categories list dropdown option values:", err);
+    }
+
+    if (id) {
+        selectedId = id;
+        setPreviousProduct(id);
+    } else {
+        selectedId = null;
+        // Reset normal text items
+        document.getElementById("productId").value = "";
+        document.getElementById("productName").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("availableTrue").checked = true;
+    }
+
+    document.getElementById("products-screen").classList.add("hidden");
+    dialog.classList.remove("hidden");
+};
+
+function setPreviousProduct(id) {
+    const row = document.getElementById(id);
+    if (!row) return;
+
+    const cells = row.cells;
+
+    // Process image tracking source element
+    const existingImgSrc = cells[0].querySelector("img").src;
+    if (existingImgSrc && !existingImgSrc.includes("null") && existingImgSrc.startsWith("data:")) {
+        currentProductImageBase64 = existingImgSrc;
+        const previewImg = document.getElementById("productImagePreview");
+        previewImg.src = existingImgSrc;
+        previewImg.classList.remove("hidden");
+    }
+
+    document.getElementById("productCatId").value = cells[1].innerText;
+    document.getElementById("productId").value = cells[2].innerText;
+    document.getElementById("productName").value = cells[3].innerText;
+
+    // Clean currency characters out of text fields
+    const cleanPrice = cells[4].innerText.replace(/[^0-9.]/g, '');
+    document.getElementById("price").value = cleanPrice;
+
+    const isAvailable = cells[5].innerText.trim().toLowerCase() === "true";
+    if (isAvailable) {
+        document.getElementById("availableTrue").checked = true;
+    } else {
+        document.getElementById("availableFalse").checked = true;
     }
 }
 
-// ========================================================================================
-//  LIVE ORDER LIST
-const activeOrderPanel = document.getElementById("activeOrder");
-const activeOrderContainer = document.getElementById("activeOrderContainer");
-const dashboard = document.getElementById("dashboard");
+window.closeEditProduct = function () {
+    document.getElementById("productId").value = "";
+    document.getElementById("productName").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("productImageInput").value = "";
+    currentProductImageBase64 = null;
+    selectedId = null;
 
-function openActive(){
-    activeOrderPanel.classList.remove("hidden");
-    activeOrderPanel.classList.add("flex");
-    overlay.classList.add("hidden");
-    overlay.classList.remove("flex");
-    dashboard.classList.add("hidden");
-    dashboard.classList.remove("flex");
-    displayActives()
-}
+    document.getElementById("addPro-screen").classList.add("hidden");
+    document.getElementById("products-screen").classList.remove("hidden");
+};
 
-async function displayActives(params){
-    let actives = new ActiveOrder(activeOrderContainer);
-    actives.displayAll();
-}
+window.submitProduct = async function () {
+    const title = document.getElementById("productFormTitle");
+    const categoryId = document.getElementById("productCatId").value;
+    const productId = document.getElementById("productId").value;
+    const productName = document.getElementById("productName").value;
+    const price = parseFloat(document.getElementById("price").value) || 0;
+    const available = document.getElementById("availableTrue").checked;
 
+    const payload = {
+        "category_id": categoryId,
+        "product_id": productId,
+        "name": productName,
+        "price": price,
+        "available": available,
+        "display_url": currentProductImageBase64
+    };
 
-function closeActive(){
-    activeOrderPanel.classList.add("hidden");
-    activeOrderPanel.classList.remove("flex");
-    overlay.classList.remove("hidden");
-    overlay.classList.add("flex");
-    dashboard.classList.remove("hidden");
-    dashboard.classList.add("flex");
-}
+    let response;
+    let message;
 
-// ========================================================================================
+    if (title.innerText.toLowerCase().includes("edit")) {
+        response = await database.patch("products", payload, selectedId);
+        message = "UPDATED";
+    } else {
+        response = await database.post("products", payload);
+        message = "ADDED";
+    }
 
-window.openMenu = openMenu;
-window.openList = openList;
-window.openHistory = openHistory;
-window.openDetails = openDetails;
-window.openSales = openSales;
-window.closeMenu = closeMenu;
-window.closeList = closeList;
-window.closeHistory = closeHistory;
-window.closeDetails = closeDetails;
-window.closeSales = closeSales;
-window.exitDashboard = exitDashboard;
+    if (response && response["status"] === "error") {
+        window.alert(`${response["message"]}`);
+    } else {
+        window.alert(`Product ${message} SUCCESSFULLY!`);
+        window.closeEditProduct();
 
-window.openEditCategory = openEditCategory;
-window.closeEditCategory = closeEditCategory;
-window.submitCategory = submitCategory;
+        const products = new Products(document.getElementById("productsColumns"));
+        await products.displayAll();
+    }
+};
 
-window.openActive = openActive;
-window.closeActive = closeActive;
+// ===================================================================
+// DISTINCT DELETE PRODUCT LOGIC
+window.openDeleteProduct = async function (id) {
+    const confirmation = window.confirm("Delete product? You may contact the developers to undo this decision.");
+    if (confirmation) {
+        let response = await database.delete("products", id);
 
-window.openEditProduct = openEditProduct;
-window.closeEditProduct = closeEditProduct;
-window.submitProduct = submitProduct;
-window.openServed = openServed;
-
-
-window.openDelete = openDelete;
-window.deleteItem = deleteItem;
-window.openPaid = openPaid;
-
-window.openUpload = openUpload;
-window.closeUpload = closeUpload;
-window.addImg = addImg;
-window.replaceImg = replaceImg;
-window.removeImg = removeImg;
-
-window.openExit = openExit;
-window.closeConfirm = closeConfirm;
+        if (response && response["status"] === "error") {
+            window.alert(`${response["message"]}`);
+        } else {
+            window.alert("PRODUCT DELETED SUCCESSFULLY!");
+            const products = new Products(document.getElementById("productsColumns"));
+            await products.displayAll();
+        }
+    }
+};

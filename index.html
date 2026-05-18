@@ -4,483 +4,585 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="./src/css/output.css" rel="stylesheet">
-    <title>KOSina-Admin-Dashboard</title>
+    <title>Document</title>
 </head>
 
+<body class="antialised">
 
+    <!-- -----------------------Login Dashboard------------------------------- -->
+    <section id="login"
+        class="select-none flex inset-0 z-50 bg-black/40 backdrop-blur-md items-center justify-center h-screen">
+        <div class="bg-white w-full max-w-md p-12 rounded-2xl shadow-2xl">
 
-<body class="bg-gray-100 antialiased text-gray-800">
-
-    <!------------------------------------ LOGIN DASHBOARD ------------------------------------>
-
-    <section id="login" class="flex items-center justify-center h-screen p-6">
-        <div class="bg-white w-full max-w-md p-10 rounded-[2.5rem] shadow-2xl border border-gray-100">
             <header class="text-center mb-10">
-                <h1 class="text-[#76a609] text-4xl font-black uppercase tracking-tighter">Login</h1>
-                <p class="text-gray-400 text-sm font-medium">KOSINA MANAGEMENT SYSTEM</p>
+                <h1 class="text-[#76a609] text-5xl font-black  tracking-tighter">LOGiN</h1>
+                <p class="text-gray-500 text-[12px] font-black tracking-[0.1em] mt-2">ADMIN TERMINAL ACCESS</p>
             </header>
-            <div class="space-y-6">
-                <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Username</label>
-                    <input type="text" id="username"
-                        class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#76a609] outline-none transition-all"
-                        placeholder="Enter admin username" required>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
-                    <input type="password" maxlength="50" id="password"
-                        class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#76a609] outline-none transition-all"
-                        placeholder="••••••••" required>
-                </div>
-                <button type="submit" id="loginButton"
-                    class="w-full bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-[#76a609]/30 hover:bg-[#658e08] hover:scale-[1.02] active:scale-95 transition-all">
-                    Enter Dashboard
-                </button>
+
+            <div class="space-y-2">
+                <label class="text-[14px] font-black uppercase tracking-widest text-gray-500 ml-2">Admin
+                    Username</label>
+                <input type="text" id="username"
+                    class="w-full p-5 bg-[#494b43] text-white border-none rounded-2xl focus:ring-2 focus:ring-black outline-none transition-all placeholder-gray-300"
+                    placeholder="Username" required>
             </div>
+
+            <br>
+
+            <div class="space-y-2">
+                <label class="text-[14px] font-black uppercase tracking-widest text-gray-500 ml-2">Access
+                    Key</label>
+                <input type="password" id="password" maxlength="20"
+                    class="w-full p-5 bg-[#494b43] text-white border-none rounded-2xl focus:ring-2 focus:ring-black outline-none transition-all placeholder-gray-300"
+                    placeholder="Password" required>
+            </div>
+
+            <br>
+
+            <button type="submit" id="loginButton"
+                class="w-full bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-[#76a609]/30 hover:bg-[#658e08] hover:scale-[1.02] active:scale-95 transition-all mt-4">
+                Enter Dashboard
+            </button>
+
         </div>
     </section>
 
-    <!------------------------------------ LODAING SCREEN ------------------------------------>
-
+    <!-- -----------------------Loading Screen------------------------------- -->
     <section id="loading" class="hidden flex flex-col items-center justify-center h-screen">
         <div class="w-16 h-16 border-4 border-[#d8e0c6] border-t-[#76a609] rounded-full animate-spin mb-4"></div>
         <p class="text-[#76a609] text-xl font-black uppercase tracking-widest animate-pulse">Initializing</p>
     </section>
 
-    <!------------------------------------ DASHBOARD CHOICES ------------------------------------>
+    <!-- -----------------------Main Dashboard------------------------------- -->
 
-    <main id="dashboard" class="hidden min-h-screen flex flex-col items-center justify-center p-8">
+    <section id="dashboard" class="flex h-screen w-screen hidden overflow-hidden">
 
-        <header class="text-center mb-16">
-            <p class="text-[#76a609] font-bold uppercase tracking-[0.3em] mb-2">Internal Management</p>
-            <h2 class="text-gray-800 text-6xl font-black uppercase tracking-tighter">Kosina <span
-                    class="text-[#76a609]">Dashboard</span></h2>
-            <h2 class="text-gray-800 text-sm font-black uppercase tracking-tighter">Establishment Name: <span
-                id="restoName" class="text-[#76a609]"></span></h2>
-            <h2 class="text-gray-800 text-sm font-black uppercase tracking-tighter">Username: <span
-                id="user" class="text-[#76a609]"></span></h2>
-        </header>
+        <!-- -----------------------Side Panel------------------------------- -->
 
-        <nav class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl">
+        <div class="flex h-full w-80 flex-col items-center bg-[#43443d] py-10 flex-shrink-0">
 
-    <!------------------------------------ CATEGORY BUTTON ------------------------------------>
-
-            <button onclick="openMenu()"
-                class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
-                    <span class="text-4xl group-hover:grayscale-0">📂</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-[#76a609] font-black text-xs uppercase tracking-widest">Menu</p>
-                    <p class="font-black text-2xl text-gray-700">CATEGORIES</p>
-                </div>
-            </button>
-
-    <!------------------------------------ PRODUCT BUTTON ------------------------------------>
-
-            <button onclick="openList()"
-                class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
-                    <span class="text-4xl">🍔</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-[#76a609] font-black text-xs uppercase tracking-widest">Product</p>
-                    <p class="font-black text-2xl text-gray-700">LIST</p>
-                </div>
-            </button>
-
-    <!------------------------------------ HISTORY BUTTON ------------------------------------>
-
-            <button onclick="openHistory()"
-                class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
-                    <span class="text-4xl">📜</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-[#76a609] font-black text-xs uppercase tracking-widest">Order</p>
-                    <p class="font-black text-2xl text-gray-700">HISTORY</p>
-                </div>
-            </button>
-
-     <!------------------------------------ DETAILS BUTTON ------------------------------------>
-
-            <button onclick="openDetails()"
-                class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
-                    <span class="text-4xl">🔍</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-[#76a609] font-black text-xs uppercase tracking-widest">Order</p>
-                    <p class="font-black text-2xl text-gray-700">DETAILS</p>
-                </div>
-            </button>
-
-    <!------------------------------------ DAILY SALES BUTTON ------------------------------------>
-
-            <button onclick="openSales()"
-                class="group bg-white rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-gray-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-[#f4f9e6] rounded-2xl group-hover:bg-[#76a609] transition-colors">
-                    <span class="text-4xl">📈</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-[#76a609] font-black text-xs uppercase tracking-widest">Daily</p>
-                    <p class="font-black text-2xl text-gray-700">SALES</p>
-                </div>
-            </button>
-
-    <!------------------------------------ EXIT BUTTON ------------------------------------>
-
-            <button onclick="openExit()"
-                class="group bg-red-50 rounded-[2rem] p-8 flex items-center gap-6 shadow-sm border border-red-100 hover:shadow-2xl hover:scale-105 transition-all">
-                <div class="p-4 bg-white rounded-2xl">
-                    <span class="text-4xl">🚪</span>
-                </div>
-                <div class="text-left">
-                    <p class="text-red-500 font-black text-xs uppercase tracking-widest">System</p>
-                    <p class="font-black text-2xl text-red-600">LOGOUT</p>
-                </div>
-            </button>
-        </nav>
-    </main>
-
-
-    <!------------------------------------ MAIN DASHBOARD ------------------------------------>
-
-
-    <div id="modalOverlay"
-        class="fixed inset-0 z-50 hidden modal-overlay items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
-
-    <!------------------------------------ CATEGORY DASHBOARD ------------------------------------>
-
-        <section id="categories"
-            class="hidden modal-content bg-white w-full max-w-6xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
-            <header class="flex justify-between items-center mb-10">
-                <div>
-                    <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Category Manager</h3>
-                    <p class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mt-1">Organize Menu
-                        Sections</p>
-                </div>
-                <button onclick="closeMenu()"
-                    class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center text-xl hover:bg-red-50 hover:text-red-500 transition-all">✕</button>
-            </header>
-
-            <div class="flex-1 overflow-y-auto no-scrollbar">
-                <table class="w-full text-left">
-                    <thead class="sticky top-0 bg-white">
-                        <tr
-                            class="text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100">
-                            <th class="pb-6 px-6">Index</th>
-                            <th class="pb-6 px-6">Category Name</th>
-                            <th class="pb-6 px-6">Category ID</th>
-                            <th class="pb-6 px-6 text-center">Modifications</th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="divide-y divide-gray-50" id="categoryColumns"></tbody>
-                </table>
-            </div>
-
-            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="openEditCategory('add')"
-                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
-                    + Add New Category
+            <div class="flex flex-col items-center px-6 text-center">
+                <button id="more-btn"
+                    class="absolute top-4 left-[18%] px-3 py-2 rounded-md transition duration-200 text-sm">
+                    <img src="./assets/el.svg"
+                        class="h-8 w-8 invert hover:scale-110 cursor-pointer transition-transform">
                 </button>
-            </footer>
-        </section>
 
-        <!------------------------------------ PRODUCTS DASHBOARD ------------------------------------>
+                <div id="dropdown-menu"
+                    class="absolute top-9 hidden left-[23%] z-10 flex flex-col items-start bg-[#494b43] shadow-lg rounded-xs text-sm text-white">
+                    <button class="hover:bg-[#e22a42] py-5 px-4 w-full text-left">Logout</button>
+                    <button class="hover:bg-[#76a609] py-5 px-4 w-full text-left whitespace-nowrap">Hide
+                        SidePanel</button>
+                </div>
 
-        <section id="products"
-            class="hidden modal-content bg-white w-full max-w-[90%] rounded-[3rem] shadow-2xl p-12 flex flex-col h-[85vh]">
-            <header class="flex justify-between items-center mb-10">
-                <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Inventory List</h3>
-                <button onclick="closeList()"
-                    class="w-14 h-14 rounded-full bg-gray-50 flex items-center justify-center hover:bg-red-50 transition-all">✕</button>
-            </header>
-            <div class="flex-1 overflow-y-auto no-scrollbar">
-                <table class="w-full text-left">
-                    <thead class="sticky top-0 bg-white">
-                        <tr
-                            class="text-[10px] font-black uppercase tracking-widest text-gray-400 border-b border-gray-100">
-                            <th class="pb-6 px-6">Image</th>
-                            <th class="pb-6 px-6">Cat ID</th>
-                            <th class="pb-6 px-6">Prod ID</th>
-                            <th class="pb-6 px-6">Name</th>
-                            <th class="pb-6 px-6">Price</th>
-                            <th class="pb-6 px-6">Stock</th>
-                            <th class="pb-6 px-6 text-center">Modify</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50" id="productColumns"></tr>
-                    </tbody>
-                </table>
+                <div class="mb-4 h-40 w-40 rounded-full bg-[#d9d9d9] border-4 border-[#9fe005]">
+                    <img src="" class="h-full w-full rounded-full object-cover">
+                </div>
+
+                <h1 id="restoName" class="text-1xl text-white leading-tight"></h1>
+                <p id="user" class="text-sm text-gray-400"></p>
+
             </div>
 
-            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="openEditProduct('add')"
-                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
-                    + Add New Product
+            <nav id="sidebar-nav" class="mt-10 w-full font-semibold text-white">
+
+                <button data-target="dashboard-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a] bg-[#76a609]">
+                    <img src="./assets/dash.svg" class="h-7 w-7 mr-2" alt="Dashboard icon">
+                    <span>DASHBOARD</span>
                 </button>
-            </footer>
-        </section>
 
-        <!------------------------------------ HISTORY DASHBOARD ------------------------------------>
-
-        <section id="history"
-            class="hidden modal-content bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[80vh]">
-            <header class="text-center mb-10 relative">
-                <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Order History</h3>
-                <button onclick="closeHistory()"
-                    class="absolute -top-2 right-0 w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center hover:bg-red-50 transition-all">✕</button>
-            </header>
-            <div class="flex-1 overflow-y-auto no-scrollbar">
-                <table class="w-full text-center">
-                    <thead class="text-[10px] font-black uppercase tracking-widest text-gray-400 border-b">
-                        <tr>
-                            <th class="pb-4">Sale ID</th>
-                            <th class="pb-4">Order ID</th>
-                            <th class="pb-4">Date</th>
-                            <th class="pb-4">Total</th>
-                            <th class="pb-4">Method</th>
-                            <th class="pb-4">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y" id="historyColumns"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <!------------------------------------ DETAILS DASHBOARD ------------------------------------>
-
-        <section id="details"
-            class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
-            <header class="text-center mb-10">
-                <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Transaction Details</h3>
-            </header>
-            <div class="flex-1 overflow-y-auto no-scrollbar">
-                <table class="w-full text-center">
-                    <thead class="text-[10px] font-black uppercase text-gray-400 border-b">
-                        <tr>
-                            <th class="pb-4">Order ID</th>
-                            <th class="pb-4">Detail ID</th>
-                            <th class="pb-4">Product ID</th>
-                            <th class="pb-4">Qty</th>
-                        </tr>
-                    </thead>
-                    <tbody id="detailColumns"></tbody>
-                </table>
-            </div>
-            <button onclick="closeDetails()"
-                class="mt-8 bg-gray-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-black transition-all">Close
-                Viewer</button>
-            <footer class="mt-8 pt-8 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="openActive()"
-                    class="bg-[#76a609] text-white px-10 py-5 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-xl shadow-[#76a609]/20 hover:scale-105 active:scale-95 transition-all">
-                    Open Live Orders
+                <button data-target="order-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a]">
+                    <img src="./assets/order.svg" class="h-7 w-7 mr-2" alt="Orders icon">
+                    <span>ORDER LIST</span>
                 </button>
-            </footer>
-        </section>
 
-        <!------------------------------------ DAILY SALES DASHBOARD ------------------------------------>
+                <button data-target="sales-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a]">
+                    <img src="./assets/sales.svg" class="h-7 w-7 mr-2" alt="Sales icon">
+                    <span>DAILY SALES</span>
+                </button>
 
-        <section id="sales"
-            class="hidden modal-content bg-white w-full max-w-4xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[70vh]">
-            <header class="text-center mb-10 relative">
-                <h3 class="text-3xl font-black uppercase text-[#76a609] tracking-tighter">Daily Sales</h3>
-                <button onclick="closeSales()"
-                    class="absolute right-0 top-0 text-gray-300 hover:text-red-500">✕</button>
-            </header>
-            <div class="flex-1 overflow-y-auto no-scrollbar">
-                <table class="w-full text-center">
-                    <thead class="text-[10px] font-black uppercase text-gray-400 border-b">
-                        <tr>
-                            <th class="pb-4">Sales ID</th>
-                            <th class="pb-4">Date</th>
-                            <th class="pb-4">Total Sales</th>
-                            <th class="pb-4">Total Income</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y" id ="saleColumns"></tbody>
-                </table>
-            </div>
-        </section>
+                <button data-target="category-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a]">
+                    <img src="./assets/cat.svg" class="h-7 w-7 mr-2" alt="Category icon">
+                    <span>CATEGORY</span>
+                </button>
 
-    </div>
+                <button data-target="products-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a]">
+                    <img src="./assets/pro.svg" class="h-7 w-7 mr-2" alt="Products icon">
+                    <span>PRODUCTS</span>
+                </button>
 
-    <!------------------------------------ EDIT CATEGORY ------------------------------------>
+                <button data-target="history-screen"
+                    class="nav-btn flex w-full items-center cursor-pointer justify-start py-4 pl-10 transition hover:bg-[#60615a]">
+                    <img src="./assets/history.svg" class="h-7 w-7 mr-2" alt="History icon">
+                    <span>HISTORY</span>
+                </button>
 
-    <dialog id="editCategory"
-        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
-        <div class="bg-white w-full max-w-md rounded-[3rem] shadow-2xl p-12 modal-content">
-            <h4 class="text-2xl font-black uppercase text-center mb-10 text-gray-800" id="categoryTitle"></h4>
-            <div class="space-y-6">
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Display
-                        Index</label>
-                    <input
-                        id="displayIndex"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="e.g. 01">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Name</label>
-                    <input
-                        id="categoryName"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="Category Name">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
-                        ID</label>
-                    <input
-                        id="categoryId"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="ID Code">
-                </div>
-                <div class="flex gap-4 mt-10">
-                    <button onclick="submitCategory()"
-                        class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:bg-[#658e08] transition-all">Confirm</button>
-                    <button onclick="closeEditCategory()"
-                        class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
-                </div>
-            </div>
+            </nav>
+
         </div>
-    </dialog>
 
-    <!------------------------------------ EDIT PRODUCT ------------------------------------>
+        <!-- -----------------------Screens for each buttons------------------------------- -->
 
-    <dialog id="editProduct"
-        class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 w-full h-full border-none">
-        <div
-            class="bg-white w-full max-w-2xl rounded-[3rem] shadow-2xl p-12 modal-content overflow-y-auto max-h-[90vh] no-scrollbar">
-            <header class="text-center mb-10">
-                <h4 class="text-3xl font-black uppercase text-gray-800 tracking-tighter" id="productTitle"></h4>
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-2">Update Inventory Item
-                    Details</p>
-            </header>
 
-            <div class="grid grid-cols-2 gap-6">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
-                        ID</label>
-                    <select name="categoryId" id="productCatId"></select>
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
-                        ID</label>
-                    <input
-                        id="productId"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="PROD-99">
-                </div>
+        <main class="flex-1 bg-gray-100 p-10 overflow-y-auto">
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
-                        Name</label>
-                    <input
-                        id="productName"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="Item Name">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Price (₱)</label>
-                    <input
-                        id="price"
-                        class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
-                        placeholder="0.00">
-                </div>
+            <!-- -----------------------Dashboard Sceen------------------------------- -->
 
-                <div class="col-span-2 pt-4">
-                    <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 mb-4">Availability
-                        Status</p>
-                    <div class="flex gap-4">
-                        <label class="flex-1 cursor-pointer group">
-                            <input id="availableTrue" type="radio" name="availability" value="true" class="hidden peer">
-                            <div
-                                class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-[#76a609] peer-checked:bg-[#f4f9e6] transition-all">
-                                <span
-                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-[#76a609]">TRUE</span>
+            <div id="dashboard-screen" class="tab-content">
+
+                <h2 class="text-[#494b43    ] text-6xl font-black uppercase tracking-tighter text-center">Kosina <span
+                        class="text-[#76a609]">Dashboard</span></h2>
+                <p class="text-gray-600 mb-6 mt-3 text-center">Here's a quick overview of today's activity and
+                    performance.
+                </p>
+
+                <div class="w-full p-6 flex items-center justify-center gap-9">
+
+                    <button
+                        class="flex h-[140px] w-[280px] shrink-0 items-center justify-between rounded-2xl bg-[#76a609] p-5 text-white hover:scale-110 transition-all ease-in-out shadow-md">
+                        <div class="flex flex-col justify-between h-full">
+                            <span class="text-3xl font-bold">0</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold opacity-90">Active Orders</span>
+                                <span class="text-xs opacity-60">May 16 Sat</span>
                             </div>
-                        </label>
-                        <label class="flex-1 cursor-pointer group">
-                            <input id="availableFalse" type="radio" name="availability" value="false" class="hidden peer">
-                            <div
-                                class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
-                                <span
-                                    class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-red-500">FALSE</span>
+                        </div>
+                        <img src="./assets/new.svg" alt="" class="h-20 w-20  4 z-1 rounded-lg shrink-0" />
+                    </button>
+
+                    <button
+                        class="flex h-[140px] w-[280px] shrink-0 items-center justify-between rounded-2xl bg-[#76a609] p-5 text-white hover:scale-110 transition-all ease-in-out shadow-md">
+                        <div class="flex flex-col justify-between h-full">
+                            <span class="text-3xl font-bold">0</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold opacity-90">Transactions</span>
+                                <span class="text-xs opacity-60">May 16 Sat</span>
                             </div>
-                        </label>
+                        </div>
+                        <img src="./assets/trans.svg" alt="" class="h-20 w-20 rounded-lg shrink-0" />
+                    </button>
+
+                    <button
+                        class="flex h-[140px] w-[280px] shrink-0 items-center justify-between rounded-2xl bg-[#76a609] p-5 text-white hover:scale-110 transition-all ease-in-out shadow-md">
+                        <div class="flex flex-col justify-between h-full">
+                            <span class="text-3xl font-bold">₱0.00</span>
+                            <div class="flex flex-col">
+                                <span class="text-sm font-semibold opacity-90">Today's Sales</span>
+                                <span class="text-xs opacity-60">May 16 Sat</span>
+                            </div>
+                        </div>
+                        <img src="./assets/sils.svg" alt="" class="h-20 w-20  rounded-lg shrink-0" />
+                    </button>
+
+                </div>
+
+
+
+                <div class="mt-10 max-w-3xl mx-[15%] rounded-2xl border border-gray-200 bg-gray-50 p-6 font-sans    ">
+                    <h3 class="mt-0 mb-2 text-lg font-semibold text-lime-700">
+                        About Kosina Kiosk
+                    </h3>
+                    <p class="mb-5 text-sm leading-relaxed text-gray-600">
+                        This ordering system was developed by <strong
+                            class="font-bold text-gray-800">SAIS-ITIPTECH</strong>
+                        as a capstone project for the
+                        academic year 2025–2026. Designed specifically for small establishments, this system aims to
+                        streamline daily food operations, simplify order tracking, and improve the overall dining
+                        experience for customers.
+                    </p>
+                    <hr class="mb-3 border-t border-gray-200">
+                    <p class="m-0 text-right text-xs text-gray-400">
+                        &copy; 2026 SAIS-ITIPTECH. All rights reserved.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- -----------------------Order List Sceen------------------------------- -->
+            <div id="order-screen" class="tab-content hidden">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Order Details</h2>
+                        <p class="text-gray-600">Manage incoming and ongoing customer food orders.</p>
+                    </div>
+
+                    <button data-target="live-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        View Active Orders
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm font-semibold uppercase tracking-wider">
+                                <th class="py-4 px-6">Product ID</th>
+                                <th class="py-4 px-6">Product Name</th>
+                                <th class="py-4 px-6 text-center">Quantity</th>
+                                <th class="py-4 px-6">Order ID</th>
+                                <th class="py-4 px-6">Detail ID</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detailColumns" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- -----------------------Daily Sales Sceen------------------------------- -->
+            <div id="sales-screen" class="tab-content hidden">
+
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Daily Sales List</h2>
+                        <p class="text-gray-600">Track today's revenue, transactions, and zesty top-selling items.</p>
+                    </div>
+
+                    <button
+                        class="shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        Today's Sales Report
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-100">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="bg-gray-50 border-b border-gray-200 text-gray-600 text-sm font-semibold uppercase tracking-wider">
+                                <th class="py-4 px-6">Transaction ID</th>
+                                <th class="py-4 px-6">Date</th>
+                                <th class="py-4 px-6">Total Items Sold</th>
+                                <th class="py-4 px-6">Total Income</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="saleColumns" class=" divide-y divide-gray-100 text-gray-700">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+            <!-- -----------------------Category Sceen------------------------------- -->
+            <div id="category-screen" class="tab-content hidden">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Category Organizer</h2>
+                        <p class="text-gray-600">Organize menu sections like Appetizers, Main Courses, Desserts, and
+                            Drinks.</p>
+                    </div>
+
+                    <button onclick="openEditCategory('add')" data-target="addCat-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        + Add New Category
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-100 bg-gray-50/50">
+                                    <th class="py-4 px-6 text-xs font-black uppercase tracking-wider text-gray-500">
+                                        Index</th>
+                                    <th class="py-4 px-6 text-xs font-black uppercase tracking-wider text-gray-500">
+                                        Category Name</th>
+                                    <th class="py-4 px-6 text-xs font-black uppercase tracking-wider text-gray-500">
+                                        Category ID</th>
+                                    <th
+                                        class="py-4 px-6 text-xs font-black uppercase tracking-wider text-gray-500 text-left">
+                                        Modification</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryColumns" class="divide-y divide-gray-50">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <div class="flex gap-4 mt-10">
-                <button onclick="submitProduct()"
-                    class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:scale-[1.02] active:scale-95 transition-all">Update
-                    Product</button>
-                <button onclick="closeEditProduct()"
-                    class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
+
+            <!-- -----------------------Product List Sceen------------------------------- -->
+            <div id="products-screen" class="tab-content hidden">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Products Organizer</h2>
+                        <p class="text-gray-600">Add, edit, or remove specific dishes and menu items from the system.
+                        </p>
+                    </div>
+
+                    <button onclick="openEditProduct('add')" data-target="addPro-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        + Add New Product
+                    </button>
+                </div>
+
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full overflow-x-scroll divide-y divide-gray-200 text-left">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Image</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Cat ID</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Prod ID</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Product Name</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Price</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th scope="col"
+                                        class="py-4 px-6 text-xs font-black text-gray-500 uppercase tracking-wider text-center">
+                                        Modifications</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsColumns" class="divide-y divide-gray-200 bg-white text-gray-700">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        
-    </dialog>
-    
-    <!------------------------------------ CONFIRM DIALOGUE ------------------------------------>
+            <!-- -----------------------History Sceen------------------------------- -->
+            <div id="history-screen" class="tab-content hidden">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">History</h2>
+                <p class="text-gray-600 mb-6">Review past logs, completed orders, and older financial reports.</p>
 
-    <dialog id="exitDialog"
-        class="hidden fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-6 w-full h-full border-none">
-        <div class="bg-white w-full max-w-sm rounded-[3rem] shadow-2xl p-12 text-center modal-content">
-            <div
-                class="w-20 h-20 bg-red-50 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-6">
-                ⚠️</div>
-            <h4 class="text-2xl font-black uppercase mb-2">Are you sure?</h4>
-            <p id="confirmMessage" class="text-gray-400 text-sm mb-8 font-medium">.</p>
-            <div class="flex flex-col gap-3">
-                <button id="confirmButton"
-                    class="w-full bg-red-500 text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-red-600 transition-all"></button>
-                <button onclick="closeConfirm()"
-                    id="backButton"
-                    class="w-full py-3 text-gray-400 font-black uppercase text-[10px] tracking-widest hover:text-gray-600 transition-all">Go Back</button>
+                <div class="overflow-x-auto bg-white rounded-lg shadow">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="border-b border-gray-200 bg-gray-50 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                <th class="py-4 px-6">Sales ID</th>
+                                <th class="py-4 px-6">Order ID</th>
+                                <th class="py-4 px-6">Date</th>
+                                <th class="py-4 px-6">Total</th>
+                                <th class="py-4 px-6">Method</th>
+                                <th class="py-4 px-6">Status</th>
+                                <th class="py-4 px-6">Served</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyColumns" class="divide-y divide-gray-100 text-sm text-gray-700">
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </dialog>
 
-    <div id="successDihh"
-        class="hidden fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-gray-900 text-white px-10 py-6 rounded-[2.5rem] shadow-2xl flex items-center gap-4 animate-bounce">
-        <div class="w-8 h-8 bg-[#76a609] rounded-full flex items-center justify-center text-xs">✔</div>
-        <p class="font-black uppercase text-xs tracking-[0.2em]" id="successMsg">Updated Successfully</p>
-    </div>
+            <!-- -----------------------Active Order Sceen------------------------------- -->
+            <div id="live-screen" class="tab-content hidden">
 
-    <dialog id="UploadPanel" class="hidden fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm flex items-center justify-center p-6 w-full h-full border-none">
-        <div>
-            <input type="file" id="imageInput">
-            <button onclick="addImg()"id="addImage"onclick="closeUpload()">ADD</button>
-            <button onclick="replaceImg()" id="replaceImage">REPLACE</button>
-            <button onclick="removeImg()" id="removeImage">REMOVE</button>
-            <button onclick="closeUpload()" id="closeUpload">BACK</button>
-        </div>
-    </dialog>
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Live Order</h2>
+                        <p class="text-gray-600">Monitor and manage all currently active customer orders in real-time.
+                        </p>
+                    </div>
 
-    <!------------------------------------ ACTIVE ORDER SCREEN ------------------------------------>
+                    <button data-target="order-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        View Order List
+                    </button>
+                </div>
 
-    <section id="activeOrder"
-        class="hidden modal-content bg-white w-full max-w-5xl rounded-[3rem] shadow-2xl p-12 flex flex-col h-[80vh]">
-        <header class="text-center mb-10 relative">
-            <h3 class="text-4xl font-black uppercase text-[#76a609] tracking-tighter">Active Order List</h3>
-            <button onclick="closeActive()"
-                class="absolute -top-2 right-0 w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center hover:bg-red-50 transition-all">✕
-            </button>
-        </header>
-        <div class="flex-1 overflow-y-auto no-scrollbar" id="activeOrderContainer"></div>
+                <div class="overflow-x-auto bg-white rounded-lg shadow">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr
+                                class="border-b border-gray-200 bg-gray-50 text-xs font-bold uppercase tracking-wider text-gray-500">
+                                <th class="py-4 px-6">Order ID</th>
+                                <th class="py-4 px-6">Customer Name</th>
+                                <th class="py-4 px-6">Items</th>
+                                <th class="py-4 px-6">Total</th>
+                                <th class="py-4 px-6">Status</th>
+                                <th class="py-4 px-6">Time Placed</th>
+                                <th class="py-4 px-6">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="live-orders-table-body" class="divide-y divide-gray-100 text-sm text-gray-700">
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <!-- -----------------------Add Product Sceen------------------------------- -->
+            <div id="addPro-screen" class="tab-content hidden">
+
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2" id="productFormTitle">Add Products</h2>
+                    </div>
+
+                    <button data-target="products-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        Product Organizer
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
+                            ID</label>
+                        <select name="categoryId" id="productCatId"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"></select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
+                            ID</label>
+                        <input id="productId"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="PROD-99">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product
+                            Name</label>
+                        <input id="productName"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="Item Name">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Price
+                            (₱)</label>
+                        <input id="price" type="number" step="0.01"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="0.00">
+                    </div>
+
+                    <div class="col-span-2 space-y-2">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Product Menu
+                            Image</label>
+                        <div
+                            class="flex items-center gap-6 p-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+                            <input id="productImageInput" type="file" accept="image/*"
+                                onchange="handleImageUpload(event)"
+                                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:uppercase file:bg-[#f4f9e6] file:text-[#76a609] hover:file:bg-lime-100 cursor-pointer" />
+                            <div class="shrink-0">
+                                <img id="productImagePreview" src="" alt="Preview"
+                                    class="hidden w-16 h-16 rounded-xl object-cover border-2 border-white shadow-md bg-white" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 pt-2">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2 mb-4">Availability
+                            Status</p>
+                        <div class="flex gap-4">
+                            <label class="flex-1 cursor-pointer group">
+                                <input id="availableTrue" type="radio" name="availability" value="true" checked
+                                    class="hidden peer">
+                                <div
+                                    class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-[#76a609] peer-checked:bg-[#f4f9e6] transition-all">
+                                    <span
+                                        class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-[#76a609]">TRUE</span>
+                                </div>
+                            </label>
+                            <label class="flex-1 cursor-pointer group">
+                                <input id="availableFalse" type="radio" name="availability" value="false"
+                                    class="hidden peer">
+                                <div
+                                    class="text-center p-4 rounded-2xl bg-gray-50 border-2 border-transparent peer-checked:border-red-500 peer-checked:bg-red-50 transition-all">
+                                    <span
+                                        class="text-xs font-black uppercase tracking-widest text-gray-400 group-hover:text-gray-600 peer-checked:text-red-500">FALSE</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-span-2 flex gap-4 mt-6">
+                        <button onclick="submitProduct()"
+                            class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-[#76a609]/20 hover:bg-[#658e08] transition-all">Confirm
+                            Product</button>
+                        <button onclick="closeEditProduct()"
+                            class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- -----------------------Add Category Sceen------------------------------- -->
+            <div id="addCat-screen" class="tab-content hidden">
+
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2" id="categoryTitle"></h2>
+                    </div>
+
+                    <button data-target="category-screen"
+                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        Category List
+                    </button>
+                </div>
+
+                <h4 class="text-2xl font-black uppercase text-center mb-10 text-gray-800" id="categoryTitle">
+                </h4>
+                <div class="space-y-6">
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Display
+                            Index</label>
+                        <input id="displayIndex"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="e.g. 01">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Name</label>
+                        <input id="categoryName"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="Category Name">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-2">Category
+                            ID</label>
+                        <input id="categoryId"
+                            class="w-full p-5 bg-gray-50 rounded-2xl outline-none border-2 border-transparent focus:border-[#76a609] transition-all"
+                            placeholder="ID Code">
+                    </div>
+                    <div class="flex gap-4 mt-10">
+                        <button onclick="submitCategory()"
+                            class="flex-1 bg-[#76a609] text-white py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg shadow-[#76a609]/20 hover:bg-[#658e08] transition-all">Confirm</button>
+                        <button onclick="closeEditCategory()"
+                            class="flex-1 bg-gray-100 text-gray-400 py-5 rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-gray-200 transition-all">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <section id="popItUp">
+
+            <div>
+
+            </div>
+
+
+        </section>
+
+
+
+
     </section>
 
-
-    <script src="./src/js/main.js" type="module">
-
+    <script type="module" src="./src/js/main.js">
     </script>
+
 </body>
 
 </html>

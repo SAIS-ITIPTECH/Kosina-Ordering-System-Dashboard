@@ -1,7 +1,7 @@
 import { database, getCookie } from "../main.js";
 
-export class LoginPanel{
-    constructor(){
+export class LoginPanel {
+    constructor() {
         const loginButton = document.getElementById("loginButton");
         this.username = document.getElementById("username");
         this.password = document.getElementById("password");
@@ -10,39 +10,39 @@ export class LoginPanel{
         }
     }
 
-    async submit(){
+    async submit() {
         let data = await database.post("login", {
             "username": this.username.value,
             "password": this.password.value
         });
-        
+
         this.username.value = "";
         this.password.value = "";
 
-        if (data["status"] === "error") {window.alert(`${data["message"]}`);}
-        else{
+        if (data["status"] === "error") { window.alert(`${data["message"]}`); }
+        else {
             this.showDashboard()
             this.saveToCookie(data);
         }
     }
 
-    saveToCookie(data){
+    saveToCookie(data) {
         document.cookie = `token=${data["token"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
         document.cookie = `name=${data["name"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
         document.cookie = `resto=${data["resto"]}; max-age=${data["expiration"]}; path=/; Secure; SameSite=Strict`;
     }
 
-    async checkToken(){
+    async checkToken() {
         let data = await database.get("return");
         if (data["status"] === "error") {
             window.alert(`${data["message"]}`);
-            
+
         }
-        else{
+        else {
             this.showDashboard();
         }
     }
-    
+
     showDashboard() {
         const login = document.getElementById("login");
         const username = document.getElementById("user")
