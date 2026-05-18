@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     <link href="./src/css/output.css" rel="stylesheet">
     <title>Document</title>
 </head>
 
 <body class="antialised">
+
 
     <!-- -----------------------Login Dashboard------------------------------- -->
     <section id="login"
@@ -48,18 +50,17 @@
         </div>
     </section>
 
-    <!-- -----------------------Loading Screen------------------------------- -->
+    <!-- -----------------------Loading na malupet------------------------------- -->
     <section id="loading" class="hidden flex flex-col items-center justify-center h-screen">
         <div class="w-16 h-16 border-4 border-[#d8e0c6] border-t-[#76a609] rounded-full animate-spin mb-4"></div>
         <p class="text-[#76a609] text-xl font-black uppercase tracking-widest animate-pulse">Initializing</p>
     </section>
 
-    <!-- -----------------------Main Dashboard------------------------------- -->
-
+    <!-- -----------------------Loob ng system after login------------------------------- -->
     <section id="dashboard" class="flex h-screen w-screen hidden overflow-hidden">
 
-        <!-- -----------------------Side Panel------------------------------- -->
 
+        <!-- -----------------------Sidebar na malupet------------------------------- -->
         <div class="flex h-full w-80 flex-col items-center bg-[#43443d] py-10 flex-shrink-0">
 
             <div class="flex flex-col items-center px-6 text-center">
@@ -71,7 +72,7 @@
 
                 <div id="dropdown-menu"
                     class="absolute top-9 hidden left-[23%] z-10 flex flex-col items-start bg-[#494b43] shadow-lg rounded-xs text-sm text-white">
-                    <button class="hover:bg-[#e22a42] py-5 px-4 w-full text-left">Logout</button>
+                    <button onclick="openExit()" class="hover:bg-[#e22a42] py-5 px-4 w-full text-left">Logout</button>
                     <button class="hover:bg-[#76a609] py-5 px-4 w-full text-left whitespace-nowrap">Hide
                         SidePanel</button>
                 </div>
@@ -127,17 +128,15 @@
 
         </div>
 
-        <!-- -----------------------Screens for each buttons------------------------------- -->
-
-
+        <!-- -----------------------Main Screen------------------------------- -->
         <main class="flex-1 bg-gray-100 p-10 overflow-y-auto">
 
-            <!-- -----------------------Dashboard Sceen------------------------------- -->
 
+            <!-- -----------------------Dashboard Screen------------------------------- -->
             <div id="dashboard-screen" class="tab-content">
 
-                <h2 class="text-[#494b43    ] text-6xl font-black uppercase tracking-tighter text-center">Kosina <span
-                        class="text-[#76a609]">Dashboard</span></h2>
+                <h3 class="text-[#494b43] text-6xl font-black uppercase tracking-tighter text-center">Kosina <span
+                        class="text-[#76a609]">Dashboard</span></h3>
                 <p class="text-gray-600 mb-6 mt-3 text-center">Here's a quick overview of today's activity and
                     performance.
                 </p>
@@ -204,17 +203,17 @@
 
             </div>
 
-
-            <!-- -----------------------Order List Sceen------------------------------- -->
+            <!-- -----------------------Order details screen------------------------------- -->
             <div id="order-screen" class="tab-content hidden">
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Order Details</h2>
+                        <h2 class="text-3xl font-bold text-[#494b43] mb-2">Order <span
+                                class="text-[#76a609]">Details</span> </h2>
                         <p class="text-gray-600">Manage incoming and ongoing customer food orders.</p>
                     </div>
 
-                    <button data-target="live-screen"
-                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                    <button data-target="live-screen" style="background-color: #76a609;"
+                        class="nav-btn shrink-0 px-6 py-4  text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
                         View Active Orders
                     </button>
                 </div>
@@ -237,18 +236,18 @@
                 </div>
             </div>
 
-
-            <!-- -----------------------Daily Sales Sceen------------------------------- -->
+            <!-- -----------------------Sales Screen------------------------------- -->
             <div id="sales-screen" class="tab-content hidden">
 
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Daily Sales List</h2>
+                        <h2 class="text-3xl font-bold text-[#494b43] mb-2">Daily <span
+                                class="text-[#76a609]">Sales</span></h2>
                         <p class="text-gray-600">Track today's revenue, transactions, and zesty top-selling items.</p>
                     </div>
 
                     <button
-                        class="shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        class="shrink-0 px-6 py-4 bg-[#76a609] hover:bg-[#76a609] text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
                         Today's Sales Report
                     </button>
                 </div>
@@ -271,18 +270,19 @@
                 </div>
             </div>
 
-
-            <!-- -----------------------Category Sceen------------------------------- -->
+            <!-- -----------------------Category Screen------------------------------- -->
             <div id="category-screen" class="tab-content hidden">
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Category Organizer</h2>
+                        <h2 class="text-3xl font-bold text-[#494b43] mb-2">Category <span
+                                class="text-[#76a609]">Organizer</span></h2>
                         <p class="text-gray-600">Organize menu sections like Appetizers, Main Courses, Desserts, and
                             Drinks.</p>
                     </div>
 
                     <button onclick="openEditCategory('add')" data-target="addCat-screen"
-                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        style="background-color: #76a609;"
+                        class="nav-btn shrink-0 px-6 py-4 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
                         + Add New Category
                     </button>
                 </div>
@@ -310,18 +310,19 @@
                 </div>
             </div>
 
-
-            <!-- -----------------------Product List Sceen------------------------------- -->
+            <!-- -----------------------product screen------------------------------- -->
             <div id="products-screen" class="tab-content hidden">
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-800 mb-2">Products Organizer</h2>
+                        <h2 class="text-3xl font-bold text-[#494b43] mb-2">Products <span
+                                class="text-[76a609]">Organizer</span></h2>
                         <p class="text-gray-600">Add, edit, or remove specific dishes and menu items from the system.
                         </p>
                     </div>
 
                     <button onclick="openEditProduct('add')" data-target="addPro-screen"
-                        class="nav-btn shrink-0 px-6 py-4 bg-lime-600 hover:bg-lime-700 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
+                        style="background-color: #76a609;"
+                        class="nav-btn shrink-0 px-6 py-4 text-white font-medium rounded-md shadow-sm transition duration-200 text-sm">
                         + Add New Product
                     </button>
                 </div>
@@ -361,9 +362,10 @@
                 </div>
             </div>
 
-            <!-- -----------------------History Sceen------------------------------- -->
+            <!-- -----------------------Login Dashboard------------------------------- -->
             <div id="history-screen" class="tab-content hidden">
-                <h2 class="text-3xl font-bold text-gray-800 mb-4">History</h2>
+                <h2 class="text-3xl font-bold text-[#494b43] mb-4">Order<span class="text-[#76a609]"> History</span>
+                </h2>
                 <p class="text-gray-600 mb-6">Review past logs, completed orders, and older financial reports.</p>
 
                 <div class="overflow-x-auto bg-white rounded-lg shadow">
@@ -386,7 +388,6 @@
                 </div>
             </div>
 
-            <!-- -----------------------Active Order Sceen------------------------------- -->
             <div id="live-screen" class="tab-content hidden">
 
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
@@ -423,7 +424,6 @@
                 </div>
             </div>
 
-            <!-- -----------------------Add Product Sceen------------------------------- -->
             <div id="addPro-screen" class="tab-content hidden">
 
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
@@ -518,7 +518,6 @@
 
             </div>
 
-            <!-- -----------------------Add Category Sceen------------------------------- -->
             <div id="addCat-screen" class="tab-content hidden">
 
                 <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
@@ -566,22 +565,32 @@
 
         </main>
 
-        <section id="popItUp">
-
-            <div>
-
+        <dialog id="exitDialog"
+            class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 w-full h-full border-none">
+            <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-2xl text-center modal-content">
+                <h3 id="confirmTitle" class="text-xl font-black text-gray-800 uppercase tracking-wide mb-2">Confirmation
+                </h3>
+                <p id="confirmMessage" class="text-sm text-gray-500 mb-6"></p>
+                <div class="flex flex-col gap-4">
+                    <button id="confirmButton" style="background-color: red;"
+                        class="flex-1 text-white py-5 rounded-xl font-black uppercase text-md tracking-widest hover:bg-red-600 transition-all">
+                        Delete Category
+                    </button>
+                    <button onclick="closeConfirm()"
+                        class="flex-1 bg-[#494b43] text-white py-5 rounded-xl font-black uppercase text-md tracking-widest hover:bg-[#76a609] transition-all">
+                        Go Back
+                    </button>
+                </div>
             </div>
-
-
-        </section>
-
-
-
+        </dialog>
 
     </section>
 
-    <script type="module" src="./src/js/main.js">
-    </script>
+
+
+
+
+    <script type="module" src="./src/js/main.js"></script>
 
 </body>
 

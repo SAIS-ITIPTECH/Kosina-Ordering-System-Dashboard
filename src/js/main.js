@@ -9,6 +9,17 @@ import { ActiveOrder } from "./ActiveOrder/ActiveOrder.js";
 
 export const database = new DatabaseConnector();
 
+// Configuration maps for handling modular UI updates upon deletion requests
+const modalMap = {
+    "categories": Categories,
+    "products": Products
+};
+
+const columnMap = {
+    "categories": document.getElementById("categoryColumns"),
+    "products": document.getElementById("productsColumns")
+};
+
 export function getCookie(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
@@ -194,22 +205,10 @@ window.submitCategory = async function () {
 };
 
 // ===================================================================
-// DELETE CATEGORY LOGIC
-window.openDelete = async function (util) {
-    const [endpoint, id] = util;
-
-    const confirmation = window.confirm("Are you sure you want to delete this category?");
-    if (confirmation) {
-        let response = await database.delete(endpoint, id);
-
-        if (response && response["status"] === "error") {
-            window.alert(`${response["message"]}`);
-        } else {
-            window.alert("DELETED SUCCESSFULLY!");
-            const categories = new Categories(document.getElementById("categoryColumns"));
-            await categories.displayAll();
-        }
-    }
+// DELETE CATEGORY LOGIC (UPDATED WITH CUSTOM MODAL)
+window.openDelete = function (util) {
+    const buttonName = (util[0] === "categories") ? "category" : "product";
+    openConfirm(`Delete ${buttonName}`, deleteItem, util, "Are you sure you want to delete this category?");
 };
 
 // ===================================================================
@@ -343,18 +342,88 @@ window.submitProduct = async function () {
 };
 
 // ===================================================================
-// DISTINCT DELETE PRODUCT LOGIC
-window.openDeleteProduct = async function (id) {
-    const confirmation = window.confirm("Delete product? You may contact the developers to undo this decision.");
-    if (confirmation) {
-        let response = await database.delete("products", id);
+// DISTINCT DELETE PRODUCT LOGIC (UPDATED WITH CUSTOM MODAL)
+window.openDeleteProduct = function (id) {
+    openConfirm("Delete product", deleteItem, ["products", id], "Delete product? You may contact the developers to undo this decision.");
+};
 
-        if (response && response["status"] === "error") {
-            window.alert(`${response["message"]}`);
-        } else {
-            window.alert("PRODUCT DELETED SUCCESSFULLY!");
-            const products = new Products(document.getElementById("productsColumns"));
-            await products.displayAll();
-        }
+
+// ========================================================================================
+// REUSABLE POPUP MODAL CONTROL UTILITIES
+
+const confirmButton = document.getElementById("confirmButton");
+const confirmMessage = document.getElementById("confirmMessage");
+const confirmTitle = document.getElementById("confirmTitle");
+
+window.openExit = function () {
+    openConfirm("Log Out", exitDashboard, null, "Are you sure you want to log out of the Admin Terminal Access?");
+};
+
+window.openPaid = function (util) {
+    if (util[1].innerText === "PAID") {
+        window.alert("this order is already paid!");
+    } else {
+        openConfirm("Confirm Paid", confirmPaid, util, "Are you sure you want to change this order status to PAID?");
     }
 };
+
+window.openServed = function (util) {
+    openConfirm("FINISH ORDER", orderServed, util, "Are you sure this order has been fully served?");
+};
+
+function openConfirm(titleText, func, util = null, body = null) {
+    const dialog = document.getElementById("exitDialog");
+    dialog.classList.remove("hidden");
+    dialog.classList.add("flex");
+
+    confirmTitle.innerText = titleText;
+    confirmMessage.innerText = body;
+
+    confirmButton.onclick = () => {
+        func(util);
+    };
+}
+
+window.closeConfirm = function () {
+    const dialog = document.getElementById("exitDialog");
+    dialog.classList.add("hidden");
+    dialog.classList.remove("flex");
+};
+
+async function deleteItem([table, id]) {
+    const response = await database.delete(table, id);
+    if (response && response["status"] === "error") {
+        window.alert(`${response["message"]}`);
+    } else {
+        window.alert("DELETED SUCCESSFULLY!");
+        if (modalMap[table] && columnMap[table]) {
+            const newTable = new modalMap[table](columnMap[table]);
+            await newTable.displayAll();
+        }
+    }
+    closeConfirm();
+}
+
+async function confirmPaid([id]) {
+    await database.patch("confirmCash", null, id);
+    const history = new History(document.getElementById("historyColumns"));
+    await history.displayAll();
+    closeConfirm();
+}
+
+function exitDashboard() {
+    document.cookie = "token= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
+    document.cookie = "name= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
+    document.cookie = "resto= ;expires=Tue, 11 Sep 2001 00:00:00 UTC; path=/;";
+    window.location.reload();
+}
+
+async function orderServed(id) {
+    let response = await database.patch("liveorder", null, id);
+    window.alert(`${response["message"]}`);
+    // Check if displayActives is a global function from other script files
+    if (typeof displayActives === "function") {
+        displayActives();
+    }
+    closeConfirm();
+}
